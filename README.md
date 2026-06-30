@@ -10,7 +10,9 @@ We have structured the project models according to the [dbt Labs Best Practice G
   - Staging SQL models are named using the `stg_<source>_<entity>` convention (e.g., `stg_pipedrive_activity_types.sql`).
   - Staging configuration files are stored in a centralized `configs` subdirectory (`models/staging/configs/stg_pipedrive_activity_types.yml`) to keep configuration files separated from models.
 - **Intermediate Layer (`models/intermediate/`)**: Will contain models representing reusable business logic transformations.
-- **Marts Layer (`models/marts/`)**: Will contain the final presentation models (such as `rep_sales_funnel_monthly`).
+- **Marts Layer (`models/marts/`)**: Will contain the final presentation and dimension models (such as `rep_sales_funnel_monthly` or `dim_crm_users`).
+  - Marts models use a **tool-agnostic naming convention** (e.g. `dim_crm_activity_types` instead of `dim_pipedrive_activity_types`). This abstracts downstream models from specific source tooling (Pipedrive) to represent business entities (like CRM) cleanly.
+  - Marts configuration files are stored in a centralized `configs` subdirectory (`models/marts/configs/dim_dimensions.yml`) to keep configuration files separated from models.
 
 ### 2. Schema Configurations
 - Staging models are configured to build into a dedicated schema named exactly `staging` (instead of appending a target prefix). This is accomplished via a custom macro overriding `generate_schema_name` ([generate_schema_name.sql](file:///Users/jimmypang/AntigravityProjects/dbt_enpal_assessment/macros/generate_schema_name.sql)).

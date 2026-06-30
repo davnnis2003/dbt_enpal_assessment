@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: mart__dim_crm_fields
+    description: Tool-agnostic CRM dimension table for custom field definitions.
+    columns:
+      - name: field_id
+        description: Primary key of the field.
+        tests:
+          - unique
+          - not_null

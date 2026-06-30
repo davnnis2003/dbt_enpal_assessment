@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: mart__dim_crm_users
+    description: GDPR-compliant CRM dimension table for users (PII-free).
+    columns:
+      - name: user_id
+        description: Primary key of the user.
+        tests:
+          - unique
+          - not_null
