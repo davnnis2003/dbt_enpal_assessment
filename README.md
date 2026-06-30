@@ -71,6 +71,15 @@ To ensure pipeline stability and catch issues before they reach production:
 - **Dense Reporting Table (Backbone Approach)**: The model uses a `CROSS JOIN` backbone of all observed calendar months × all 11 funnel steps to guarantee a complete grid in the output. Steps with no deals in a given month emit `deals_count = 0` via `COALESCE`, making the table safe for dashboards relying on full month × funnel_step coverage (e.g. time-series charts).
 - **Future Enhancements (dbt Packages)**: Considered adding external dbt packages (e.g., `dbt_utils` for tests like `unique_combination_of_columns` or helper macros), but skipped installing them to keep the project setup simple and clean for this interview.
 
+### 13. dbt Exposures (Downstream Lineage)
+- **Purpose**: dbt Exposures declare downstream consumers of dbt models to complete the DAG lineage beyond dbt itself. This enables `dbt docs` to surface end-to-end data lineage — from raw sources all the way to the final consumer — and makes impact analysis possible (e.g. "which dashboards are affected if I change `fct_crm_deal_changes`?").
+- **Placement**: Exposures are defined in a dedicated [exposures.yml](../models/exposures.yml) at the `models/` root level (rather than inside a specific layer folder) since downstream consumers can depend on models from any layer — not just reporting.
+- **Current Exposure** (`sales_funnel_monthly_dashboard`): Declares the monthly sales funnel dashboard as a consumer of `rep_sales_funnel_monthly`.
+- **Future Exposures** can be added to represent other downstream dependencies, for example:
+  - **BI / Dashboards**: Metabase, Looker, Tableau reports consuming marts or reporting models.
+  - **Reverse ETL**: Tools like Census or Hightouch syncing enriched CRM data back to Salesforce/HubSpot.
+  - **ML / Feature Stores**: Algorithms consuming mart-level aggregates as training features.
+
 ---
 
 ## Original Assignment Details
