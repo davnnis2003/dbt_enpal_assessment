@@ -29,7 +29,9 @@ LEFT JOIN
     ON activities.activity_type_category = activity_types.activity_type_category
 
 WHERE
+    
     activities.due_at_utc >= (SELECT MAX(due_at_utc) FROM "postgres"."marts"."fct_crm_activities")
+
 
 
 -- TODO: Explore JOIN with Deals Changes fact table later

@@ -35,7 +35,7 @@ LEFT JOIN
     ON activities.activity_type_category = activity_types.activity_type_category
 {% if is_incremental() %}
 WHERE
-    activities.due_at_utc >= (SELECT MAX(due_at_utc) FROM {{ this }})
+    {{ get_incremental_date_filter('activities.due_at_utc', 'due_at_utc') }}
 {% endif %}
 
 -- TODO: Explore JOIN with Deals Changes fact table later

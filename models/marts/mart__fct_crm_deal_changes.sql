@@ -153,6 +153,6 @@ LEFT JOIN
     AND CASE WHEN deal_changes_with_lag.new_value ~ '^[0-9]+$' THEN CAST(deal_changes_with_lag.new_value AS integer) END = field_options_new.option_id
 {% if is_incremental() %}
 WHERE
-    deal_changes_with_lag.changed_at_utc >= (SELECT MAX(changed_at_utc) FROM {{ this }})
+    {{ get_incremental_date_filter('deal_changes_with_lag.changed_at_utc', 'changed_at_utc') }}
 {% endif %}
 
