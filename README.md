@@ -143,16 +143,18 @@ dbt_enpal_assessment/
 
 # Engineering Conventions
 
-## 1. Schema Configurations
-- Staging models are configured to build into a dedicated schema named exactly `staging` (instead of appending a target prefix). This is accomplished via a custom macro overriding `generate_schema_name` ([generate_schema_name.sql](../macros/generate_schema_name.sql)).
+## Schema Configurations & Custom Macros
+We use custom macros to control database schemas and query building behaviors:
+- **`generate_schema_name` ([generate_schema_name.sql](../macros/generate_schema_name.sql))**: Overrides dbt's default schema resolution behavior. Staging and seeds are built directly into clean target schemas (e.g. `staging`, `s_pipedrive`) instead of appending them as target suffix schema names.
+- **`get_incremental_date_filter` ([get_incremental_date_filter.sql](../macros/get_incremental_date_filter.sql))**: Formats and injects safe date/timestamp filters inside subqueries for incremental models, preventing Postgres correlation query errors.
 
-## 2. Primary Key Validation & Testing
+## Primary Key Validation & Testing
 - Every staging model configures data validation tests on its primary key (e.g., `unique` and `not_null` constraints on `activity_type_id` and `field_id`) in its respective YML configuration file to guarantee data integrity at the entry point of the pipeline.
 
-## 3. Timezone Handling
+## Timezone Handling
 - **Timezone Conversion**: Metrify currently operates exclusively in the Germany market and the team is located in Berlin. Source data from Pipedrive is provided in UTC by default. To align analytics and reports with local operations, all UTC timestamps are converted to the `Europe/Berlin` timezone in the staging layer models (e.g. `due_at` in [stg_pipedrive_activities.sql](../models/staging/stg_pipedrive_activities.sql)).
 
-## 4. JSON Unnesting (CRM Fields)
+## JSON Unnesting (CRM Fields)
 - **JSON Options Unnesting**: Staged CRM field definitions include a JSON column `field_value_options` containing an array of key-value pairs (id and label options). To hide the complexity of JSON arrays from business stakeholders and ensure query performance at scale, we unnested these values into a dedicated `dim_crm_field_options` table (configured as a separate dimension in the marts layer). The raw JSON column is excluded from the main `dim_crm_fields` dimension table.
 
 ## 5. Incremental Materialization Strategy
