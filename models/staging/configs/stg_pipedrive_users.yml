@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: stg_pipedrive_users
+    description: Staged user accounts from the Pipedrive source.
+    columns:
+      - name: user_id
+        description: The primary key of the user.
+        tests:
+          - unique
+          - not_null
+      - name: user_name
+        description: The full name of the user.
+      - name: email
+        description: The email address of the user.
+      - name: modified_at_utc
+        description: The date and time when the user record was last modified in UTC timezone.
+      - name: modified_at_berlin
+        description: The date and time when the user record was last modified converted to Europe/Berlin timezone.

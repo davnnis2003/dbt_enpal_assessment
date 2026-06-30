@@ -35,6 +35,12 @@ We have structured the project models according to the [dbt Labs Best Practice G
 ### 7. Timezone Handling
 - **Timezone Conversion**: Metrify currently operates exclusively in the Germany market and the team is located in Berlin. Source data from Pipedrive is provided in UTC by default. To align analytics and reports with local operations, all UTC timestamps are converted to the `Europe/Berlin` timezone in the staging layer models (e.g. `due_at` in [stg_pipedrive_activities.sql](file:///Users/jimmypang/AntigravityProjects/dbt_enpal_assessment/models/staging/stg_pipedrive_activities.sql)).
 
+### 8. PII & GDPR Compliance
+- **GDPR Policy**: The staging users model (`stg_pipedrive_users`) ingests PII columns (`user_name`, `email`) directly from raw sources to capture the full source schema. However, to comply with GDPR:
+  - The `staging` schema itself **must not be accessible** by business stakeholders by default.
+  - Downstream public-facing tables (such as `dim_users` in the marts layer) must exclude these PII columns.
+  - If access to PII is required, those columns will be separated into a restricted `pii` schema/model. Access to this schema must be formally requested and requires explicit approval from the Data Protection Officer (DPO).
+
 ---
 
 ## Original Assignment Details
