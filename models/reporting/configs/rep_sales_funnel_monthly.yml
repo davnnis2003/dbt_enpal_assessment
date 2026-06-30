@@ -17,6 +17,9 @@ models:
         tests:
           - not_null
       - name: deals_count
-        description: Unique count of deals that entered this step during the month.
+        description: Unique count of deals that entered this step during the month. Always >= 0 due to COALESCE on backbone; 0 means no deals were recorded for that step that month.
         tests:
           - not_null
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: ">= 0"
