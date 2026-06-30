@@ -28,6 +28,135 @@ Then run the pipeline:
 ```bash
 dbt deps && dbt build
 ```
+Example logs:
+
+```bash
+jimmypang@bee40d28-db24-43be-8eeb-d133ad959530 dbt_enpal_assessment % uv run dbt build
+15:15:09  Running with dbt=1.11.11
+15:15:09  Registered adapter: postgres=1.10.2
+15:15:10  [WARNING]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.
+There are 1 unused configuration paths:
+- models.enpal_assessment_project.intermediate
+15:15:10  Found 14 models, 6 seeds, 34 data tests, 6 sources, 1 exposure, 593 macros
+15:15:10  
+15:15:10  Concurrency: 1 threads (target='dev')
+15:15:10  
+15:15:11  1 of 55 START seed file s_pipedrive.activity ................................... [RUN]
+15:15:11  1 of 55 OK loaded seed file s_pipedrive.activity ............................... [INSERT 4579 in 0.91s]
+15:15:11  2 of 55 START seed file s_pipedrive.activity_types ............................. [RUN]
+15:15:11  2 of 55 OK loaded seed file s_pipedrive.activity_types ......................... [INSERT 4 in 0.03s]
+15:15:11  3 of 55 START seed file s_pipedrive.deal_changes ............................... [RUN]
+15:15:13  3 of 55 OK loaded seed file s_pipedrive.deal_changes ........................... [INSERT 15406 in 1.74s]
+15:15:13  4 of 55 START seed file s_pipedrive.fields ..................................... [RUN]
+15:15:13  4 of 55 OK loaded seed file s_pipedrive.fields ................................. [INSERT 4 in 0.03s]
+15:15:13  5 of 55 START seed file s_pipedrive.stages ..................................... [RUN]
+15:15:13  5 of 55 OK loaded seed file s_pipedrive.stages ................................. [INSERT 9 in 0.03s]
+15:15:13  6 of 55 START seed file s_pipedrive.users ...................................... [RUN]
+15:15:14  6 of 55 OK loaded seed file s_pipedrive.users .................................. [INSERT 1787 in 0.28s]
+15:15:14  7 of 55 START sql view model staging.stg_pipedrive_activities .................. [RUN]
+15:15:14  7 of 55 OK created sql view model staging.stg_pipedrive_activities ............. [CREATE VIEW in 0.08s]
+15:15:14  8 of 55 START sql view model staging.stg_pipedrive_activity_types .............. [RUN]
+15:15:14  8 of 55 OK created sql view model staging.stg_pipedrive_activity_types ......... [CREATE VIEW in 0.04s]
+15:15:14  9 of 55 START sql view model staging.stg_pipedrive_deal_changes ................ [RUN]
+15:15:14  9 of 55 OK created sql view model staging.stg_pipedrive_deal_changes ........... [CREATE VIEW in 0.04s]
+15:15:14  10 of 55 START sql view model staging.stg_pipedrive_fields ..................... [RUN]
+15:15:14  10 of 55 OK created sql view model staging.stg_pipedrive_fields ................ [CREATE VIEW in 0.03s]
+15:15:14  11 of 55 START sql view model staging.stg_pipedrive_stages ..................... [RUN]
+15:15:14  11 of 55 OK created sql view model staging.stg_pipedrive_stages ................ [CREATE VIEW in 0.04s]
+15:15:14  12 of 55 START sql view model staging.stg_pipedrive_users ...................... [RUN]
+15:15:14  12 of 55 OK created sql view model staging.stg_pipedrive_users ................. [CREATE VIEW in 0.03s]
+15:15:14  13 of 55 START test not_null_stg_pipedrive_activities_activity_id .............. [RUN]
+15:15:14  13 of 55 PASS not_null_stg_pipedrive_activities_activity_id .................... [PASS in 0.04s]
+15:15:14  14 of 55 START test unique_stg_pipedrive_activities_activity_id ................ [RUN]
+15:15:14  14 of 55 PASS unique_stg_pipedrive_activities_activity_id ...................... [PASS in 0.03s]
+15:15:14  15 of 55 START test not_null_stg_pipedrive_activity_types_activity_type_id ..... [RUN]
+15:15:14  15 of 55 PASS not_null_stg_pipedrive_activity_types_activity_type_id ........... [PASS in 0.02s]
+15:15:14  16 of 55 START test unique_stg_pipedrive_activity_types_activity_type_id ....... [RUN]
+15:15:14  16 of 55 PASS unique_stg_pipedrive_activity_types_activity_type_id ............. [PASS in 0.03s]
+15:15:14  17 of 55 START test not_null_stg_pipedrive_deal_changes_deal_change_id ......... [RUN]
+15:15:14  17 of 55 PASS not_null_stg_pipedrive_deal_changes_deal_change_id ............... [PASS in 0.04s]
+15:15:14  18 of 55 START test unique_stg_pipedrive_deal_changes_deal_change_id ........... [RUN]
+15:15:14  18 of 55 PASS unique_stg_pipedrive_deal_changes_deal_change_id ................. [PASS in 0.06s]
+15:15:14  19 of 55 START test not_null_stg_pipedrive_fields_field_id ..................... [RUN]
+15:15:14  19 of 55 PASS not_null_stg_pipedrive_fields_field_id ........................... [PASS in 0.02s]
+15:15:14  20 of 55 START test unique_stg_pipedrive_fields_field_id ....................... [RUN]
+15:15:14  20 of 55 PASS unique_stg_pipedrive_fields_field_id ............................. [PASS in 0.02s]
+15:15:14  21 of 55 START test not_null_stg_pipedrive_stages_stage_id ..................... [RUN]
+15:15:14  21 of 55 PASS not_null_stg_pipedrive_stages_stage_id ........................... [PASS in 0.02s]
+15:15:14  22 of 55 START test unique_stg_pipedrive_stages_stage_id ....................... [RUN]
+15:15:14  22 of 55 PASS unique_stg_pipedrive_stages_stage_id ............................. [PASS in 0.02s]
+15:15:14  23 of 55 START test not_null_stg_pipedrive_users_user_id ....................... [RUN]
+15:15:14  23 of 55 PASS not_null_stg_pipedrive_users_user_id ............................. [PASS in 0.02s]
+15:15:14  24 of 55 START test unique_stg_pipedrive_users_user_id ......................... [RUN]
+15:15:14  24 of 55 PASS unique_stg_pipedrive_users_user_id ............................... [PASS in 0.02s]
+15:15:14  25 of 55 START sql table model marts.dim_crm_activity_types .................... [RUN]
+15:15:14  25 of 55 OK created sql table model marts.dim_crm_activity_types ............... [SELECT 4 in 0.05s]
+15:15:14  26 of 55 START sql table model marts.dim_crm_field_options ..................... [RUN]
+15:15:14  26 of 55 OK created sql table model marts.dim_crm_field_options ................ [SELECT 14 in 0.04s]
+15:15:14  27 of 55 START sql table model marts.dim_crm_fields ............................ [RUN]
+15:15:14  27 of 55 OK created sql table model marts.dim_crm_fields ....................... [SELECT 4 in 0.04s]
+15:15:14  28 of 55 START sql table model marts.dim_crm_stages ............................ [RUN]
+15:15:14  28 of 55 OK created sql table model marts.dim_crm_stages ....................... [SELECT 9 in 0.04s]
+15:15:14  29 of 55 START sql table model marts.dim_crm_users ............................. [RUN]
+15:15:14  29 of 55 OK created sql table model marts.dim_crm_users ........................ [SELECT 1787 in 0.06s]
+15:15:14  30 of 55 START test not_null_mart__dim_crm_activity_types_activity_type_id ..... [RUN]
+15:15:14  30 of 55 PASS not_null_mart__dim_crm_activity_types_activity_type_id ........... [PASS in 0.02s]
+15:15:14  31 of 55 START test unique_mart__dim_crm_activity_types_activity_type_id ....... [RUN]
+15:15:14  31 of 55 PASS unique_mart__dim_crm_activity_types_activity_type_id ............. [PASS in 0.02s]
+15:15:14  32 of 55 START test not_null_mart__dim_crm_field_options_field_id .............. [RUN]
+15:15:14  32 of 55 PASS not_null_mart__dim_crm_field_options_field_id .................... [PASS in 0.02s]
+15:15:14  33 of 55 START test not_null_mart__dim_crm_field_options_option_id ............. [RUN]
+15:15:15  33 of 55 PASS not_null_mart__dim_crm_field_options_option_id ................... [PASS in 0.02s]
+15:15:15  34 of 55 START test not_null_mart__dim_crm_fields_field_id ..................... [RUN]
+15:15:15  34 of 55 PASS not_null_mart__dim_crm_fields_field_id ........................... [PASS in 0.02s]
+15:15:15  35 of 55 START test unique_mart__dim_crm_fields_field_id ....................... [RUN]
+15:15:15  35 of 55 PASS unique_mart__dim_crm_fields_field_id ............................. [PASS in 0.02s]
+15:15:15  36 of 55 START test not_null_mart__dim_crm_stages_stage_id ..................... [RUN]
+15:15:15  36 of 55 PASS not_null_mart__dim_crm_stages_stage_id ........................... [PASS in 0.02s]
+15:15:15  37 of 55 START test unique_mart__dim_crm_stages_stage_id ....................... [RUN]
+15:15:15  37 of 55 PASS unique_mart__dim_crm_stages_stage_id ............................. [PASS in 0.02s]
+15:15:15  38 of 55 START test not_null_mart__dim_crm_users_user_id ....................... [RUN]
+15:15:15  38 of 55 PASS not_null_mart__dim_crm_users_user_id ............................. [PASS in 0.02s]
+15:15:15  39 of 55 START test unique_mart__dim_crm_users_user_id ......................... [RUN]
+15:15:15  39 of 55 PASS unique_mart__dim_crm_users_user_id ............................... [PASS in 0.02s]
+15:15:15  40 of 55 START sql incremental model marts.fct_crm_activities .................. [RUN]
+15:15:15  40 of 55 OK created sql incremental model marts.fct_crm_activities ............. [INSERT 0 1 in 0.12s]
+15:15:15  41 of 55 START sql incremental model marts.fct_crm_deal_changes ................ [RUN]
+15:15:15  41 of 55 OK created sql incremental model marts.fct_crm_deal_changes ........... [INSERT 0 1 in 0.16s]
+15:15:15  42 of 55 START test not_null_mart__fct_crm_activities_activity_id .............. [RUN]
+15:15:15  42 of 55 PASS not_null_mart__fct_crm_activities_activity_id .................... [PASS in 0.02s]
+15:15:15  43 of 55 START test unique_mart__fct_crm_activities_activity_id ................ [RUN]
+15:15:15  43 of 55 PASS unique_mart__fct_crm_activities_activity_id ...................... [PASS in 0.02s]
+15:15:15  44 of 55 START test not_null_mart__fct_crm_deal_changes_deal_change_id ......... [RUN]
+15:15:15  44 of 55 PASS not_null_mart__fct_crm_deal_changes_deal_change_id ............... [PASS in 0.02s]
+15:15:15  45 of 55 START test not_null_mart__fct_crm_deal_changes_deal_id ................ [RUN]
+15:15:15  45 of 55 PASS not_null_mart__fct_crm_deal_changes_deal_id ...................... [PASS in 0.02s]
+15:15:15  46 of 55 START test unique_mart__fct_crm_deal_changes_deal_change_id ........... [RUN]
+15:15:15  46 of 55 PASS unique_mart__fct_crm_deal_changes_deal_change_id ................. [PASS in 0.04s]
+15:15:15  47 of 55 START sql table model reporting.rep_sales_funnel_monthly .............. [RUN]
+15:15:15  47 of 55 OK created sql table model reporting.rep_sales_funnel_monthly ......... [SELECT 154 in 0.07s]
+15:15:15  48 of 55 NO-OP exposure sales_funnel_monthly_dashboard ......................... [NO-OP in 0.00s]
+15:15:15  49 of 55 START test accepted_values_rep_sales_funnel_monthly_funnel_step__1__2__2_1__3__3_1__4__5__6__7__8__9  [RUN]
+15:15:15  49 of 55 PASS accepted_values_rep_sales_funnel_monthly_funnel_step__1__2__2_1__3__3_1__4__5__6__7__8__9  [PASS in 0.03s]
+15:15:15  50 of 55 START test dbt_utils_expression_is_true_rep_sales_funnel_monthly_deals_count___0  [RUN]
+15:15:15  50 of 55 PASS dbt_utils_expression_is_true_rep_sales_funnel_monthly_deals_count___0  [PASS in 0.02s]
+15:15:15  51 of 55 START test dbt_utils_unique_combination_of_columns_rep_sales_funnel_monthly_month__funnel_step  [RUN]
+15:15:15  51 of 55 PASS dbt_utils_unique_combination_of_columns_rep_sales_funnel_monthly_month__funnel_step  [PASS in 0.02s]
+15:15:15  52 of 55 START test not_null_rep_sales_funnel_monthly_deals_count .............. [RUN]
+15:15:15  52 of 55 PASS not_null_rep_sales_funnel_monthly_deals_count .................... [PASS in 0.02s]
+15:15:15  53 of 55 START test not_null_rep_sales_funnel_monthly_funnel_step .............. [RUN]
+15:15:15  53 of 55 PASS not_null_rep_sales_funnel_monthly_funnel_step .................... [PASS in 0.02s]
+15:15:15  54 of 55 START test not_null_rep_sales_funnel_monthly_kpi_name ................. [RUN]
+15:15:15  54 of 55 PASS not_null_rep_sales_funnel_monthly_kpi_name ....................... [PASS in 0.02s]
+15:15:15  55 of 55 START test not_null_rep_sales_funnel_monthly_month .................... [RUN]
+15:15:15  55 of 55 PASS not_null_rep_sales_funnel_monthly_month .......................... [PASS in 0.02s]
+15:15:15  
+15:15:15  Finished running 1 exposure, 2 incremental models, 6 seeds, 6 table models, 34 data tests, 6 view models in 0 hours 0 minutes and 5.62 seconds (5.62s).
+15:15:15  
+15:15:15  Completed successfully
+15:15:15  
+15:15:15  Done. PASS=54 WARN=0 ERROR=0 SKIP=0 NO-OP=1 TOTAL=55`
+```
 
 ### 3. View DBT Documentation (Optional)
 Generate the catalog metadata and launch the interactive documentation site:
