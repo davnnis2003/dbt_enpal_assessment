@@ -4,7 +4,7 @@ WITH
         SELECT
             *
         FROM
-            "postgres"."public"."activity"
+            "postgres"."s_pipedrive"."activity"
     ),
     renamed AS (
         SELECT

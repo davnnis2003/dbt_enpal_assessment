@@ -1,0 +1,14 @@
+
+    
+    
+    
+    create table "postgres"."s_pipedrive"."fields" ("id" integer,"field_key" text,"name" text,"field_value_options" jsonb)
+  ;
+    -- dbt seed --
+    
+          insert into "postgres"."s_pipedrive"."fields" ("id", "field_key", "name", "field_value_options") values
+          (%s,%s,%s,%s),(%s,%s,%s,%s),(%s,%s,%s,%s),(%s,%s,%s,%s)
+      
+
+;
+  
