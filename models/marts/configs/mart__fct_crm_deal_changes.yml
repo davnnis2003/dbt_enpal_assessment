@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: mart__fct_crm_deal_changes
-    description: Fact table capturing historical changes (transitions) to CRM deals.
+    description: Fact table capturing historical changes (transitions) to CRM deals, tracking both old and new states.
     columns:
       - name: deal_change_id
         description: Unique primary key for each deal change.
@@ -21,17 +21,31 @@ models:
         description: The key of the field that was changed (e.g. stage_id, user_id, lost_reason, add_time).
       - name: field_name
         description: The human-readable name of the field that was changed.
+      - name: old_value
+        description: The raw value of the field before the change.
       - name: new_value
         description: The raw value of the field after the change.
+      - name: old_value_resolved
+        description: The human-readable or resolved label of the old value if applicable (e.g. Stage name, Lost reason description).
       - name: new_value_resolved
         description: The human-readable or resolved label of the new value if applicable (e.g. Stage name, Lost reason description).
+      - name: old_stage_id
+        description: Resolved stage ID if the changed field was stage_id (before the change).
+      - name: old_stage_name
+        description: Resolved stage name if the changed field was stage_id (before the change).
+      - name: old_user_id
+        description: Resolved assigned user ID if the changed field was user_id (before the change).
+      - name: old_lost_reason_id
+        description: Resolved lost reason option ID if the changed field was lost_reason (before the change).
+      - name: old_lost_reason_label
+        description: Resolved lost reason label if the changed field was lost_reason (before the change).
       - name: new_stage_id
-        description: Resolved stage ID if the changed field was stage_id.
+        description: Resolved stage ID if the changed field was stage_id (after the change).
       - name: new_stage_name
-        description: Resolved stage name if the changed field was stage_id.
+        description: Resolved stage name if the changed field was stage_id (after the change).
       - name: new_user_id
-        description: Resolved assigned user ID if the changed field was user_id.
+        description: Resolved assigned user ID if the changed field was user_id (after the change).
       - name: new_lost_reason_id
-        description: Resolved lost reason option ID if the changed field was lost_reason.
+        description: Resolved lost reason option ID if the changed field was lost_reason (after the change).
       - name: new_lost_reason_label
-        description: Resolved lost reason label if the changed field was lost_reason.
+        description: Resolved lost reason label if the changed field was lost_reason (after the change).
