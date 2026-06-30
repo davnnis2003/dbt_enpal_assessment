@@ -97,7 +97,9 @@ We partition our logic into distinct layers, each with dedicated responsibilitie
   - **Dimension Tables (`dim_`)**: Descriptive entities (e.g. `dim_crm_users`).
   - **Fact Tables (`fct_`)**: Action/event-based metrics (e.g. `fct_crm_activities`).
 - **Reporting Layer (`models/reporting/`)**: Dedicated presentation layer positioned downstream of the Marts layer, aggregating metrics specifically for BI dashboards and final reporting (e.g. `rep_sales_funnel_monthly`).
-- **Exposure Layer (`models/exposures.yml`)**: Defines downstream data consumers (e.g., specific dashboards or reports) to document end-to-end lineage within the dbt DAG.
+- **Exposure Layer (`models/exposures.yml`)**: Defines downstream data consumers (e.g., specific dashboards or reports) to document end-to-end lineage within the dbt DAG. This completes the DAG lineage beyond dbt, enabling impact analysis (e.g. knowing which dashboards are affected if a mart table changes).
+  - *Current Exposure*: `sales_funnel_monthly_dashboard` (declares the monthly sales funnel dashboard as a consumer of `rep_sales_funnel_monthly`).
+  - *Future Exposures*: Can represent Metabase/Looker/Tableau dashboards, Census/Hightouch reverse ETL syncs, or ML feature stores.
 
 
 ![dbt pipeline reporting lineage](docs/dbt_reporting_lineage.png)
@@ -148,7 +150,7 @@ dbt_enpal_assessment/
 - Every staging model configures data validation tests on its primary key (e.g., `unique` and `not_null` constraints on `activity_type_id` and `field_id`) in its respective YML configuration file to guarantee data integrity at the entry point of the pipeline.
 
 ## 3. Timezone Handling
-- **Timezone Conversion**: Metrify currently operates exclusively in the Germany market and the team is located in Berlin. Source data from Pipedrive is provided in UTC by default. To align analytics and reports with local operations, all UTC timestamps are converted to the `Europe/Berlin` timezone in the staging layer models (e.g. `due_at` in [stg_pipedrive_activities.sql](file:///Users/jimmypang/AntigravityProjects/dbt_enpal_assessment/models/staging/stg_pipedrive_activities.sql)).
+- **Timezone Conversion**: Metrify currently operates exclusively in the Germany market and the team is located in Berlin. Source data from Pipedrive is provided in UTC by default. To align analytics and reports with local operations, all UTC timestamps are converted to the `Europe/Berlin` timezone in the staging layer models (e.g. `due_at` in [stg_pipedrive_activities.sql](../models/staging/stg_pipedrive_activities.sql)).
 
 ## 4. JSON Unnesting (CRM Fields)
 - **JSON Options Unnesting**: Staged CRM field definitions include a JSON column `field_value_options` containing an array of key-value pairs (id and label options). To hide the complexity of JSON arrays from business stakeholders and ensure query performance at scale, we unnested these values into a dedicated `dim_crm_field_options` table (configured as a separate dimension in the marts layer). The raw JSON column is excluded from the main `dim_crm_fields` dimension table.
@@ -169,16 +171,7 @@ dbt_enpal_assessment/
 - **Dense Reporting Table (Backbone Approach)**: The model uses a `CROSS JOIN` backbone of all observed calendar months × all 11 funnel steps to guarantee a complete grid in the output. Steps with no deals in a given month emit `deals_count = 0` via `COALESCE`, making the table safe for dashboards relying on full month × funnel_step coverage (e.g. time-series charts).
 - **dbt Packages (`dbt_utils`)**: Added `dbt-labs/dbt_utils` (declared in [packages.yml](packages.yml), installed via `dbt deps`). Currently used for the `dbt_utils.expression_is_true` test enforcing `deals_count >= 0` on `rep_sales_funnel_monthly`. Additional tests (e.g. `unique_combination_of_columns`) and macros can be adopted incrementally as needed.
 
-### 13. dbt Exposures (Downstream Lineage)
-- **Purpose**: dbt Exposures declare downstream consumers of dbt models to complete the DAG lineage beyond dbt itself. This enables `dbt docs` to surface end-to-end data lineage — from raw sources all the way to the final consumer — and makes impact analysis possible (e.g. "which dashboards are affected if I change `fct_crm_deal_changes`?").
-- **Placement**: Exposures are defined in a dedicated [exposures.yml](file:///Users/jimmypang/AntigravityProjects/dbt_enpal_assessment/models/exposures.yml) at the `models/` root level (rather than inside a specific layer folder) since downstream consumers can depend on models from any layer — not just reporting.
-- **Current Exposure** (`sales_funnel_monthly_dashboard`): Declares the monthly sales funnel dashboard as a consumer of `rep_sales_funnel_monthly`.
-- **Future Exposures** can be added to represent other downstream dependencies, for example:
-  - **BI / Dashboards**: Metabase, Looker, Tableau reports consuming marts or reporting models.
-  - **Reverse ETL**: Tools like Census or HubSpot/Salesforce syncs consuming mart-level aggregates.
-  - **ML / Feature Stores**: Algorithms consuming mart-level aggregates as training features.
-
-# Goverance & Guardrailings
+# Governance & Guardrails
 
 ## 6. Gitignoring the `target/` Directory (Considerations)
 - We considered adding the `target/` folder to `.gitignore` since committing artifacts of every dbt invocation (such as compiled SQL, manifest files, and run results) is not useful and adds unnecessary noise to the repository.
