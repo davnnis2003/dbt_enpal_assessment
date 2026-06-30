@@ -1,4 +1,4 @@
-# DBT Pipedrive Analytics Project
+# Metrify Case Study
 
 This project implements the analytics engineering pipeline using DBT for Pipedrive CRM data.
 
