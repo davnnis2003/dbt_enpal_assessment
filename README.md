@@ -48,6 +48,8 @@ This project adheres to modern analytics engineering standards by combining **[D
 
 Our practices focus on modularity, clear grain definition, schema separation, tool-agnostic interfaces in presentation layers, and incremental processing for performance.
 
+![dbt pipeline reporting lineage](docs/dbt_reporting_lineage.png)
+
 ## Folder Structures & Project Organization
 We have structured the project models according to the dbt Labs directory guidelines:
 - **Source Layer (`models/sources.yml`)**: Declares raw connection namespaces for external database tables. *(Note: Not utilized in this project as raw inputs are static CSVs loaded via the Seed layer).*
