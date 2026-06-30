@@ -49,8 +49,9 @@ This project adheres to modern analytics engineering standards by combining **[D
 Our practices focus on modularity, clear grain definition, schema separation, tool-agnostic interfaces in presentation layers, and incremental processing for performance.
 
 We partition our logic into distinct layers, each with dedicated responsibilities:
-- **Source Layer (`models/sources.yml`)**: Declares raw connection namespaces for external database tables. *(Note: Not utilized in this project as raw inputs are static CSVs loaded via the Seed layer).*
-- **Seed Layer (`seeds/`)**: Manages the ingestion of small, static lookup datasets directly from version-controlled CSV files. See the [Seeds Layer Guide](seeds/README.md) for details on static inputs and configurations.
+- **ODS (Operational Data Store) Ingestion Layer**: Handles raw data connections and ingestion into the warehouse database:
+  - **Source Layer (`models/sources.yml`)**: Declares raw connection namespaces for external database tables. *(Note: Not utilized in this project as raw inputs are static CSVs loaded via the Seed layer).*
+  - **Seed Layer (`seeds/`)**: Manages the ingestion of small, static lookup datasets directly from version-controlled CSV files. See the [Seeds Layer Guide](seeds/README.md) for details on static inputs and configurations.
 - **Staging Layer (`models/staging/`)**: Contains models that have direct 1:1 relationships with our raw source tables. They perform light cleaning, renaming, casting, and timezone conversion. See the [Staging Architecture Guide](models/staging/README.md) for details on naming conventions, directory layout, and configurations.
 - **Intermediate Layer (`models/intermediate/`)**: Contains models representing reusable business logic transformations. See the [Intermediate Architecture Guide](models/intermediate/README.md) for details on modular logic boundaries.
 - **Marts Layer (`models/marts/`)**: Contains the business-ready presentation models. See the [Marts Architecture Guide](models/marts/README.md) for details on our design principles and mart classifications:
@@ -101,11 +102,7 @@ dbt_enpal_assessment/
 ## Project Architecture & Core Decisions
 
 ### 1. Schema Configurations
-- Staging models are configured to build into a dedicated schema named exactly `staging` (instead of appending a target prefix). This is accomplished via a custom macro overriding `generate_schema_name` ([generate_schema_name.sql](file:///Users/jimmypang/AntigravityProjects/dbt_enpal_assessment/macros/generate_schema_name.sql)).
-
-### 3. DBT Seeds
-- **dbt Seeds**: We use [dbt seeds](https://docs.getdbt.com/docs/build/seeds) to load and manage the CSV data files (`activity_types.csv`, `activity.csv`, `deal_changes.csv`, `fields.csv`, `stages.csv`, and `users.csv`) located under `seeds/` (copied from `raw_data/`).
-- **Dedicated Schema**: These seeds are configured in `dbt_project.yml` to build into a dedicated schema named exactly `s_pipedrive`.
+- Staging models are configured to build into a dedicated schema named exactly `staging` (instead of appending a target prefix). This is accomplished via a custom macro overriding `generate_schema_name` ([generate_schema_name.sql](../macros/generate_schema_name.sql)).
 
 ### 4. Tests on Primary Keys
 - Every staging model configures data validation tests on its primary key (e.g., `unique` and `not_null` constraints on `activity_type_id` and `field_id`) in its respective YML configuration file to guarantee data integrity at the entry point of the pipeline.
