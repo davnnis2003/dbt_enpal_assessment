@@ -191,6 +191,7 @@ To guarantee long-term pipeline stability, we propose establishing a CI/CD workf
 To open the repository for contributions from other Business Units or non-central data teams safely, we propose the following governance mechanisms:
 - **Pull Request Template**: Enforce a standardized Pull Request template so that all developers document changes, catalog schemas, and list validation results consistently.
 - **CODEOWNERS Policy**: Use a GitHub `CODEOWNERS` configuration. The central Data Platform team maintains ownership over core directories (such as `models/staging/` and macros), requiring their explicit approval on PRs, while decentralized teams are granted ownership over specific domain-based directories.
+- **Model Ownership Metadata**: Enforce the use of dbt `meta` properties at the model configuration level to document ownership directly in the code (e.g. configuring `+meta: {owner: "@team-sales-analytics"}` in the schema configurations). This maps code objects to specific Slack channels or teams for operational support and metadata cataloging.
 
 
 
