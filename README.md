@@ -31,9 +31,7 @@ dbt deps && dbt build
 
 ---
 
-## Project Structure & Architecture
-
-### 1. Folder Structures & Project Organization
+# Folder Structures & Project Organization
 We have structured the project models according to the [dbt Labs Best Practice Guide on project structure](https://docs.getdbt.com/guides/best-practices/how-we-structure/1-guide-overview):
 - **Staging Layer (`models/staging/`)**: Contains models that have direct 1:1 relationships with our raw source tables. They perform light cleaning, renaming, and casting.
   - Staging SQL models are named using the `stg_<source>_<entity>` convention (e.g., `stg_pipedrive_activity_types.sql`).
@@ -43,7 +41,11 @@ We have structured the project models according to the [dbt Labs Best Practice G
   - Marts models use a **tool-agnostic naming convention** (e.g. `dim_crm_activity_types` instead of `dim_pipedrive_activity_types`). This abstracts downstream models from specific source tooling (Pipedrive) to represent business entities (like CRM) cleanly.
   - Marts configuration files are stored in a centralized `configs` subdirectory (e.g., `models/marts/configs/mart__dim_crm_activity_types.yml`) to keep configuration files separated from models.
 
-### 2. Schema Configurations
+---
+
+## Project Architecture & Core Decisions
+
+### 1. Schema Configurations
 - Staging models are configured to build into a dedicated schema named exactly `staging` (instead of appending a target prefix). This is accomplished via a custom macro overriding `generate_schema_name` ([generate_schema_name.sql](file:///Users/jimmypang/AntigravityProjects/dbt_enpal_assessment/macros/generate_schema_name.sql)).
 
 ### 3. DBT Seeds
