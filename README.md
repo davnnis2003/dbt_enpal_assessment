@@ -53,12 +53,17 @@ We have structured the project models according to the [dbt Labs Best Practice G
 ### 10. Incremental Materialization Strategy
 - **Incremental Materialization**: The heavy marts fact tables (`mart__fct_crm_activities` and `mart__fct_crm_deal_changes`) are materialized as `incremental` to optimize query performance and reduce processing costs.
 - **Schema Evolution Policy**:
-  - The project-wide default is configured in `dbt_project.yml` as `+on_schema_change: "append_new_columns"`.
+  - The project-wide default is configured in `dbt_project.yml` as `+on_schema_change: "append_new_columns"`. This default is chosen because automatically syncing column removals or renames in production is risky; it should remain a manual, intentional action. Silent column drops or renames can easily break downstream dependencies, such as reporting dashboards, BI tools, or other dependent dbt models.
   - The two marts fact tables override this with `on_schema_change='sync_all_columns'` to automatically handle added, renamed, or deleted columns.
 - **Reusable Filtering Macro**: Created the `get_incremental_date_filter` macro ([get_incremental_date_filter.sql](file:///Users/jimmypang/AntigravityProjects/dbt_enpal_assessment/macros/get_incremental_date_filter.sql)) to safely handle postgres timestamp/date filtering within subqueries to avoid aggregate/correlation errors.
 - **Upstream Performance Filtering**:
   - In `mart__fct_crm_activities.sql`, we filter records early within the `activities` CTE before joining to `activity_types`.
   - In `mart__fct_crm_deal_changes.sql`, we compute the `LAG()` function over the full history in `deal_changes_raw` (retaining window calculation correctness), and then apply the incremental filter directly in the `deal_changes` CTE. This ensures downstream joins are only processed for the new incremental rows.
+
+### 11. CI/CD Best Practices
+To ensure pipeline stability and catch issues before they reach production:
+- **`dbt compile` Checks**: The CI pipeline should run `dbt compile` on every Pull Request to verify syntax correctness, project configuration compliance, and macro resolutions.
+- **Dry-Run in Ephemeral Database/Schema**: Before merging to production, the CI pipeline should run the modified dbt models against an ephemeral/temporary schema or database (or cloned environment) to perform a full dry-run execution. This verifies that all queries execute successfully against the database engine.
 
 ---
 
