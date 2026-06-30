@@ -1,0 +1,1 @@
+{{ test_unique(column_name="user_id", model=get_where_subquery(ref('mart__dim_crm_users'))) }}

@@ -1,0 +1,1 @@
+{{ test_unique(column_name="deal_change_id", model=get_where_subquery(ref('mart__fct_crm_deal_changes'))) }}

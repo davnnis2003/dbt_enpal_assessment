@@ -2,10 +2,21 @@ version: 2
 
 models:
   - name: mart__dim_crm_users
-    description: GDPR-compliant CRM dimension table for users (PII-free).
+    description: >
+      CRM dimension table for users. Since all CRM users are Metrify internal employees,
+      this model keeps their PII directly in the dimension table without a separate PII request process.
+      However, due to the GDPR data retention policy, records older than 6 months are automatically excluded.
     columns:
       - name: user_id
         description: Primary key of the user.
         tests:
           - unique
           - not_null
+      - name: user_name
+        description: Name of the internal employee.
+      - name: email
+        description: Email of the internal employee.
+      - name: modified_at_utc
+        description: Timestamp when the user record was last modified, in UTC.
+      - name: modified_at_berlin
+        description: Timestamp when the user record was last modified, in Europe/Berlin timezone.

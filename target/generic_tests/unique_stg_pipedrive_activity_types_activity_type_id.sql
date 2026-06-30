@@ -1,0 +1,1 @@
+{{ test_unique(column_name="activity_type_id", model=get_where_subquery(ref('stg_pipedrive_activity_types'))) }}

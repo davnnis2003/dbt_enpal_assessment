@@ -38,10 +38,12 @@ We have structured the project models according to the [dbt Labs Best Practice G
 - **Timezone Conversion**: Metrify currently operates exclusively in the Germany market and the team is located in Berlin. Source data from Pipedrive is provided in UTC by default. To align analytics and reports with local operations, all UTC timestamps are converted to the `Europe/Berlin` timezone in the staging layer models (e.g. `due_at` in [stg_pipedrive_activities.sql](file:///Users/jimmypang/AntigravityProjects/dbt_enpal_assessment/models/staging/stg_pipedrive_activities.sql)).
 
 ### 8. PII & GDPR Compliance
-- **GDPR Policy**: The staging users model (`stg_pipedrive_users`) ingests PII columns (`user_name`, `email`) directly from raw sources to capture the full source schema. However, to comply with GDPR:
-  - The `staging` schema itself **must not be accessible** by business stakeholders by default.
-  - Downstream public-facing tables (such as `dim_users` in the marts layer) must exclude these PII columns.
-  - If access to PII is required, those columns will be separated into a restricted `pii` schema/model. Access to this schema must be formally requested and requires explicit approval from the Data Protection Officer (DPO).
+- **GDPR Policy**: The staging users model (`stg_pipedrive_users`) ingests PII columns (`user_name`, `email`) directly from raw sources to capture the full source schema.
+- **Internal Employees Assumption**: All users are assumed to be Metrify internal employees. Therefore, PII (name and email) is kept directly in the main dimension table (`dim_crm_users`) without a separate restricted PII schema or access request process.
+- **Data Retention Policy**: To comply with GDPR guidelines, user data in `dim_crm_users` is proposed to be excluded or deleted if it is older than 6 months (based on `modified_at_utc`). The exact details of this mechanism must be aligned with the Data Protection Officer (DPO), specifically:
+  - Confirming the exact retention window (6 months vs. other regulatory periods).
+  - Deciding between physical deletion (hard/soft delete in the database) vs. logical filtering at query/view level.
+  - Ensuring upstream/downstream impact analysis is done for historical tracking and reporting purposes.
 
 ### 9. JSON Unnesting (CRM Fields)
 - **JSON Options Unnesting**: Staged CRM field definitions include a JSON column `field_value_options` containing an array of key-value pairs (id and label options). To hide the complexity of JSON arrays from business stakeholders and ensure query performance at scale, we unnested these values into a dedicated `dim_crm_field_options` table (configured as a separate dimension in the marts layer). The raw JSON column is excluded from the main `dim_crm_fields` dimension table.
