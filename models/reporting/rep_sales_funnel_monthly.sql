@@ -4,6 +4,19 @@
     alias='rep_sales_funnel_monthly'
 ) }}
 
+-- NOTE: Dense vs. Sparse Reporting Table
+-- The current implementation produces a "sparse" table: only month × funnel_step combinations
+-- that have at least one deal are present. Months with no activity for a given step will be
+-- absent entirely, which can cause issues in dashboards that rely on a complete grid
+-- (e.g. bar/line charts expecting every funnel step to appear for every month).
+--
+-- If a "dense" backbone is needed, restructure this model as follows:
+--   1. Build a CTE `all_months` using GENERATE_SERIES over the full date range.
+--   2. Build a CTE `all_funnel_steps` as a static VALUES list of all 11 funnel steps.
+--   3. CROSS JOIN `all_months` × `all_funnel_steps` to produce every possible combination.
+--   4. LEFT JOIN the actual aggregated deals_count onto that backbone.
+--   5. Use COALESCE(deals_count, 0) so missing combinations default to 0 instead of NULL.
+
 WITH
     stage_entries AS (
         SELECT
