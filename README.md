@@ -69,6 +69,7 @@ To ensure pipeline stability and catch issues before they reach production:
 - **Reporting Schema**: Configured a dedicated custom schema `reporting` using dbt custom schemas mapping to separate reporting models.
 - **Daily Funnel Summary (`mart__sum_crm_daily_summary`)**: Implemented a daily summary model to aggregate stage transition events and key activities (Sales Call 1 and Sales Call 2) by deal.
 - **Monthly Funnel Report (`reporting__sales_funnel_monthly`)**: Combines daily summary records into monthly intervals, mapping stages and activities to the requested funnel steps (`1`, `2`, `2.1`, `3`, `3.1`, `4`, `5`, `6`, `7`, `8`, `9`), and computes the exact count of unique deals that reached each step.
+- **Future Enhancements (dbt Packages)**: Considered adding external dbt packages (e.g., `dbt_utils` for tests like `unique_combination_of_columns` or helper macros), but skipped installing them to keep the project setup simple and clean for this interview.
 
 ---
 
