@@ -48,10 +48,7 @@ This project adheres to modern analytics engineering standards by combining **[D
 
 Our practices focus on modularity, clear grain definition, schema separation, tool-agnostic interfaces in presentation layers, and incremental processing for performance.
 
-![dbt pipeline reporting lineage](docs/dbt_reporting_lineage.png)
-
-## Folder Structures & Project Organization
-We have structured the project models according to the dbt Labs directory guidelines:
+We partition our logic into distinct layers, each with dedicated responsibilities:
 - **Source Layer (`models/sources.yml`)**: Declares raw connection namespaces for external database tables. *(Note: Not utilized in this project as raw inputs are static CSVs loaded via the Seed layer).*
 - **Seed Layer (`seeds/`)**: Manages the ingestion of small, static lookup datasets directly from version-controlled CSV files. See the [Seeds Layer Guide](seeds/README.md) for details on static inputs and configurations.
 - **Staging Layer (`models/staging/`)**: Contains models that have direct 1:1 relationships with our raw source tables. They perform light cleaning, renaming, casting, and timezone conversion. See the [Staging Architecture Guide](models/staging/README.md) for details on naming conventions, directory layout, and configurations.
@@ -62,7 +59,10 @@ We have structured the project models according to the dbt Labs directory guidel
 - **Reporting Layer (`models/reporting/`)**: Dedicated presentation layer positioned downstream of the Marts layer, aggregating metrics specifically for BI dashboards and final reporting (e.g. `rep_sales_funnel_monthly`).
 - **Exposure Layer (`models/exposures.yml`)**: Defines downstream data consumers (e.g., specific dashboards or reports) to document end-to-end lineage within the dbt DAG.
 
+![dbt pipeline reporting lineage](docs/dbt_reporting_lineage.png)
 
+## Folder Structures & Project Organization
+We structure our files in the repository as follows:
 ```text
 dbt_enpal_assessment/
 ├── seeds/                         # Raw static lookup files (CSV)
