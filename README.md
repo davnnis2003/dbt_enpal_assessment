@@ -46,6 +46,7 @@ We have structured the project models according to the dbt Labs directory guidel
   - **Dimension Tables (`dim_`)**: Descriptive entities (e.g. `dim_crm_users`).
   - **Fact Tables (`fct_`)**: Action/event-based metrics (e.g. `fct_crm_activities`).
 - **Reporting Layer (`models/reporting/`)**: Dedicated presentation layer positioned downstream of the Marts layer, aggregating metrics specifically for BI dashboards and final reporting (e.g. `rep_sales_funnel_monthly`).
+- **Exposure Layer (`models/exposures.yml`)**: Defines downstream data consumers (e.g., specific dashboards or reports) to document end-to-end lineage within the dbt DAG.
 
 ---
 
