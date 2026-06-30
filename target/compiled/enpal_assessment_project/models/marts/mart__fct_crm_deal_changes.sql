@@ -43,7 +43,7 @@ WITH
         FROM
             "postgres"."marts"."dim_crm_stages"
     ),
-    field_options AS (
+    lost_reasons AS (
         SELECT
             *
         FROM
@@ -66,14 +66,14 @@ SELECT
     -- Resolved values for key fields (Old)
     CASE
         WHEN deal_changes.changed_field_key = 'stage_id' THEN stages_old.stage_name
-        WHEN deal_changes.changed_field_key = 'lost_reason' THEN field_options_old.option_label
+        WHEN deal_changes.changed_field_key = 'lost_reason' THEN lost_reasons_old.option_label
         ELSE deal_changes.old_value
     END AS old_value_resolved,
     
     -- Resolved values for key fields (New)
     CASE
         WHEN deal_changes.changed_field_key = 'stage_id' THEN stages_new.stage_name
-        WHEN deal_changes.changed_field_key = 'lost_reason' THEN field_options_new.option_label
+        WHEN deal_changes.changed_field_key = 'lost_reason' THEN lost_reasons_new.option_label
         ELSE deal_changes.new_value
     END AS new_value_resolved,
     
@@ -91,7 +91,7 @@ SELECT
         WHEN deal_changes.changed_field_key = 'lost_reason' AND deal_changes.old_value ~ '^[0-9]+$' THEN CAST(deal_changes.old_value AS integer)
     END AS old_lost_reason_id,
     CASE 
-        WHEN deal_changes.changed_field_key = 'lost_reason' THEN field_options_old.option_label
+        WHEN deal_changes.changed_field_key = 'lost_reason' THEN lost_reasons_old.option_label
     END AS old_lost_reason_label,
     
     -- Structured typed columns (New)
@@ -108,7 +108,7 @@ SELECT
         WHEN deal_changes.changed_field_key = 'lost_reason' AND deal_changes.new_value ~ '^[0-9]+$' THEN CAST(deal_changes.new_value AS integer)
     END AS new_lost_reason_id,
     CASE 
-        WHEN deal_changes.changed_field_key = 'lost_reason' THEN field_options_new.option_label
+        WHEN deal_changes.changed_field_key = 'lost_reason' THEN lost_reasons_new.option_label
     END AS new_lost_reason_label
 
 FROM
@@ -126,9 +126,9 @@ LEFT JOIN
     ON deal_changes.changed_field_key = 'stage_id' 
     AND CASE WHEN deal_changes.old_value ~ '^[0-9]+$' THEN CAST(deal_changes.old_value AS integer) END = stages_old.stage_id
 LEFT JOIN
-    field_options AS field_options_old
+    lost_reasons AS lost_reasons_old
     ON deal_changes.changed_field_key = 'lost_reason' 
-    AND CASE WHEN deal_changes.old_value ~ '^[0-9]+$' THEN CAST(deal_changes.old_value AS integer) END = field_options_old.option_id
+    AND CASE WHEN deal_changes.old_value ~ '^[0-9]+$' THEN CAST(deal_changes.old_value AS integer) END = lost_reasons_old.option_id
     
 -- Joins for New Values
 LEFT JOIN
@@ -136,9 +136,9 @@ LEFT JOIN
     ON deal_changes.changed_field_key = 'stage_id' 
     AND CASE WHEN deal_changes.new_value ~ '^[0-9]+$' THEN CAST(deal_changes.new_value AS integer) END = stages_new.stage_id
 LEFT JOIN
-    field_options AS field_options_new
+    lost_reasons AS lost_reasons_new
     ON deal_changes.changed_field_key = 'lost_reason' 
-    AND CASE WHEN deal_changes.new_value ~ '^[0-9]+$' THEN CAST(deal_changes.new_value AS integer) END = field_options_new.option_id
+    AND CASE WHEN deal_changes.new_value ~ '^[0-9]+$' THEN CAST(deal_changes.new_value AS integer) END = lost_reasons_new.option_id
 
 WHERE
     
