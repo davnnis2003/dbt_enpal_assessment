@@ -147,27 +147,8 @@ dbt_enpal_assessment/
 ### 4. Tests on Primary Keys
 - Every staging model configures data validation tests on its primary key (e.g., `unique` and `not_null` constraints on `activity_type_id` and `field_id`) in its respective YML configuration file to guarantee data integrity at the entry point of the pipeline.
 
-### 5. DBT Documentation
-- Table and column descriptions are documented in the model YAML files. You can generate and view the interactive documentation site using:
-  ```bash
-  dbt docs generate
-  dbt docs serve
-  ```
-
-### 6. Gitignoring the `target/` Directory (Considerations)
-- We considered adding the `target/` folder to `.gitignore` since committing artifacts of every dbt invocation (such as compiled SQL, manifest files, and run results) is not useful and adds unnecessary noise to the repository.
-- However, we chose to keep it in git tracking for **interview purposes only** to make it easy to inspect generated files without requiring local database runs. In a production environment, we would absolutely ignore `target/` unless a very clear use case exists.
-
 ### 7. Timezone Handling
 - **Timezone Conversion**: Metrify currently operates exclusively in the Germany market and the team is located in Berlin. Source data from Pipedrive is provided in UTC by default. To align analytics and reports with local operations, all UTC timestamps are converted to the `Europe/Berlin` timezone in the staging layer models (e.g. `due_at` in [stg_pipedrive_activities.sql](file:///Users/jimmypang/AntigravityProjects/dbt_enpal_assessment/models/staging/stg_pipedrive_activities.sql)).
-
-### 8. PII & GDPR Compliance
-- **GDPR Policy**: The staging users model (`stg_pipedrive_users`) ingests PII columns (`user_name`, `email`) directly from raw sources to capture the full source schema.
-- **Internal Employees Assumption**: All users are assumed to be Metrify internal employees. Therefore, PII (name and email) is kept directly in the main dimension table (`dim_crm_users`) without a separate restricted PII schema or access request process.
-- **Data Retention Policy**: To comply with GDPR guidelines, user data in `dim_crm_users` is proposed to be excluded or deleted if it is older than 6 months (based on `modified_at_utc`). The exact details of this mechanism must be aligned with the Data Protection Officer (DPO), specifically:
-  - Confirming the exact retention window (6 months vs. other regulatory periods).
-  - Deciding between physical deletion (hard/soft delete in the database) vs. logical filtering at query/view level.
-  - Ensuring upstream/downstream impact analysis is done for historical tracking and reporting purposes.
 
 ### 9. JSON Unnesting (CRM Fields)
 - **JSON Options Unnesting**: Staged CRM field definitions include a JSON column `field_value_options` containing an array of key-value pairs (id and label options). To hide the complexity of JSON arrays from business stakeholders and ensure query performance at scale, we unnested these values into a dedicated `dim_crm_field_options` table (configured as a separate dimension in the marts layer). The raw JSON column is excluded from the main `dim_crm_fields` dimension table.
@@ -181,6 +162,19 @@ dbt_enpal_assessment/
 - **Upstream Performance Filtering**:
   - In `mart__fct_crm_activities.sql`, we filter records early within the `activities` CTE before joining to `activity_types`.
   - In `mart__fct_crm_deal_changes.sql`, we compute the `LAG()` function over the full history in `deal_changes_raw` (retaining window calculation correctness), and then apply the incremental filter directly in the `deal_changes` CTE. This ensures downstream joins are only processed for the new incremental rows.
+
+### 6. Gitignoring the `target/` Directory (Considerations)
+- We considered adding the `target/` folder to `.gitignore` since committing artifacts of every dbt invocation (such as compiled SQL, manifest files, and run results) is not useful and adds unnecessary noise to the repository.
+- However, we chose to keep it in git tracking for **interview purposes only** to make it easy to inspect generated files without requiring local database runs. In a production environment, we would absolutely ignore `target/` unless a very clear use case exists.
+
+
+### 8. PII & GDPR Compliance
+- **GDPR Policy**: The staging users model (`stg_pipedrive_users`) ingests PII columns (`user_name`, `email`) directly from raw sources to capture the full source schema.
+- **Internal Employees Assumption**: All users are assumed to be Metrify internal employees. Therefore, PII (name and email) is kept directly in the main dimension table (`dim_crm_users`) without a separate restricted PII schema or access request process.
+- **Data Retention Policy**: To comply with GDPR guidelines, user data in `dim_crm_users` is proposed to be excluded or deleted if it is older than 6 months (based on `modified_at_utc`). The exact details of this mechanism must be aligned with the Data Protection Officer (DPO), specifically:
+  - Confirming the exact retention window (6 months vs. other regulatory periods).
+  - Deciding between physical deletion (hard/soft delete in the database) vs. logical filtering at query/view level.
+  - Ensuring upstream/downstream impact analysis is done for historical tracking and reporting purposes.
 
 ### 11. CI/CD Best Practices
 To ensure pipeline stability and catch issues before they reach production:
