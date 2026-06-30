@@ -9,7 +9,7 @@ WITH
         SELECT
             *
         FROM
-            "postgres"."public"."deal_changes"
+            "postgres"."s_pipedrive"."deal_changes"
     ),
     renamed AS (
         SELECT

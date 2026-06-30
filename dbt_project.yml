@@ -39,3 +39,12 @@ models:
     marts:
       +materialized: table
       +schema: marts
+
+seeds:
+  enpal_assessment_project:
+    +schema: s_pipedrive
+    fields:
+      +column_types:
+        field_value_options: jsonb
+
+

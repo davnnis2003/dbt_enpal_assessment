@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: postgres_public
     database: postgres
-    schema: public
+    schema: s_pipedrive
     tables:
       - name: activity_types
       - name: activity
