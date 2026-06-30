@@ -145,3 +145,6 @@ LEFT JOIN
     field_options AS field_options_new
     ON deal_changes_with_lag.changed_field_key = 'lost_reason' 
     AND CASE WHEN deal_changes_with_lag.new_value ~ '^[0-9]+$' THEN CAST(deal_changes_with_lag.new_value AS integer) END = field_options_new.option_id
+
+WHERE
+    deal_changes_with_lag.changed_at_utc >= (SELECT MAX(changed_at_utc) FROM "postgres"."marts"."fct_crm_deal_changes")
