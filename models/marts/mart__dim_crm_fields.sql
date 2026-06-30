@@ -6,7 +6,6 @@
 SELECT
     field_id,
     field_key,
-    field_name,
-    field_value_options
+    field_name
 FROM
     {{ ref('stg_pipedrive_fields') }}

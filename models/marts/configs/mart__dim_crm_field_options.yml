@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: mart__dim_crm_field_options
+    description: Tool-agnostic CRM dimension table for custom field value options (flattened from JSON).
+    columns:
+      - name: field_id
+        description: Foreign key of the field.
+        tests:
+          - not_null
+      - name: field_key
+        description: The unique key of the field (e.g. stage_id, lost_reason).
+      - name: field_name
+        description: The display name of the field (e.g. Stage, Lost Reason).
+      - name: option_id
+        description: The ID of the field option.
+        tests:
+          - not_null
+      - name: option_label
+        description: The display label of the option (e.g. Lead Generation).
