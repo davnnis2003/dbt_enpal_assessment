@@ -163,6 +163,23 @@ dbt_enpal_assessment/
   - In `mart__fct_crm_activities.sql`, we filter records early within the `activities` CTE before joining to `activity_types`.
   - In `mart__fct_crm_deal_changes.sql`, we compute the `LAG()` function over the full history in `deal_changes_raw` (retaining window calculation correctness), and then apply the incremental filter directly in the `deal_changes` CTE. This ensures downstream joins are only processed for the new incremental rows.
 
+### 12. Reporting Layer & Monthly Funnel Report
+- **Reporting Schema**: Configured a dedicated custom schema `reporting` using dbt custom schemas mapping to separate reporting models.
+- **Monthly Funnel Report (`rep_sales_funnel_monthly`)**: Directly aggregates stage transition events and key activities (Sales Call 1 and Sales Call 2) into monthly intervals, mapping them to the requested funnel steps (`1`, `2`, `2.1`, `3`, `3.1`, `4`, `5`, `6`, `7`, `8`, `9`), and computes the exact count of unique deals that entered each step.
+- **Dense Reporting Table (Backbone Approach)**: The model uses a `CROSS JOIN` backbone of all observed calendar months × all 11 funnel steps to guarantee a complete grid in the output. Steps with no deals in a given month emit `deals_count = 0` via `COALESCE`, making the table safe for dashboards relying on full month × funnel_step coverage (e.g. time-series charts).
+- **dbt Packages (`dbt_utils`)**: Added `dbt-labs/dbt_utils` (declared in [packages.yml](packages.yml), installed via `dbt deps`). Currently used for the `dbt_utils.expression_is_true` test enforcing `deals_count >= 0` on `rep_sales_funnel_monthly`. Additional tests (e.g. `unique_combination_of_columns`) and macros can be adopted incrementally as needed.
+
+### 13. dbt Exposures (Downstream Lineage)
+- **Purpose**: dbt Exposures declare downstream consumers of dbt models to complete the DAG lineage beyond dbt itself. This enables `dbt docs` to surface end-to-end data lineage — from raw sources all the way to the final consumer — and makes impact analysis possible (e.g. "which dashboards are affected if I change `fct_crm_deal_changes`?").
+- **Placement**: Exposures are defined in a dedicated [exposures.yml](file:///Users/jimmypang/AntigravityProjects/dbt_enpal_assessment/models/exposures.yml) at the `models/` root level (rather than inside a specific layer folder) since downstream consumers can depend on models from any layer — not just reporting.
+- **Current Exposure** (`sales_funnel_monthly_dashboard`): Declares the monthly sales funnel dashboard as a consumer of `rep_sales_funnel_monthly`.
+- **Future Exposures** can be added to represent other downstream dependencies, for example:
+  - **BI / Dashboards**: Metabase, Looker, Tableau reports consuming marts or reporting models.
+  - **Reverse ETL**: Tools like Census or HubSpot/Salesforce syncs consuming mart-level aggregates.
+  - **ML / Feature Stores**: Algorithms consuming mart-level aggregates as training features.
+
+# Goverance & Guardrailings
+
 ## 6. Gitignoring the `target/` Directory (Considerations)
 - We considered adding the `target/` folder to `.gitignore` since committing artifacts of every dbt invocation (such as compiled SQL, manifest files, and run results) is not useful and adds unnecessary noise to the repository.
 - However, we chose to keep it in git tracking for **interview purposes only** to make it easy to inspect generated files without requiring local database runs. In a production environment, we would absolutely ignore `target/` unless a very clear use case exists.
@@ -180,20 +197,7 @@ To ensure pipeline stability and catch issues before they reach production:
 - **`dbt compile` Checks**: The CI pipeline should run `dbt compile` on every Pull Request to verify syntax correctness, project configuration compliance, and macro resolutions.
 - **Dry-Run in Ephemeral Database/Schema**: Before merging to production, the CI pipeline should run the modified dbt models against an ephemeral/temporary schema or database (or cloned environment) to perform a full dry-run execution. This verifies that all queries execute successfully against the database engine.
 
-### 12. Reporting Layer & Monthly Funnel Report
-- **Reporting Schema**: Configured a dedicated custom schema `reporting` using dbt custom schemas mapping to separate reporting models.
-- **Monthly Funnel Report (`rep_sales_funnel_monthly`)**: Directly aggregates stage transition events and key activities (Sales Call 1 and Sales Call 2) into monthly intervals, mapping them to the requested funnel steps (`1`, `2`, `2.1`, `3`, `3.1`, `4`, `5`, `6`, `7`, `8`, `9`), and computes the exact count of unique deals that entered each step.
-- **Dense Reporting Table (Backbone Approach)**: The model uses a `CROSS JOIN` backbone of all observed calendar months × all 11 funnel steps to guarantee a complete grid in the output. Steps with no deals in a given month emit `deals_count = 0` via `COALESCE`, making the table safe for dashboards relying on full month × funnel_step coverage (e.g. time-series charts).
-- **dbt Packages (`dbt_utils`)**: Added `dbt-labs/dbt_utils` (declared in [packages.yml](packages.yml), installed via `dbt deps`). Currently used for the `dbt_utils.expression_is_true` test enforcing `deals_count >= 0` on `rep_sales_funnel_monthly`. Additional tests (e.g. `unique_combination_of_columns`) and macros can be adopted incrementally as needed.
 
-### 13. dbt Exposures (Downstream Lineage)
-- **Purpose**: dbt Exposures declare downstream consumers of dbt models to complete the DAG lineage beyond dbt itself. This enables `dbt docs` to surface end-to-end data lineage — from raw sources all the way to the final consumer — and makes impact analysis possible (e.g. "which dashboards are affected if I change `fct_crm_deal_changes`?").
-- **Placement**: Exposures are defined in a dedicated [exposures.yml](file:///Users/jimmypang/AntigravityProjects/dbt_enpal_assessment/models/exposures.yml) at the `models/` root level (rather than inside a specific layer folder) since downstream consumers can depend on models from any layer — not just reporting.
-- **Current Exposure** (`sales_funnel_monthly_dashboard`): Declares the monthly sales funnel dashboard as a consumer of `rep_sales_funnel_monthly`.
-- **Future Exposures** can be added to represent other downstream dependencies, for example:
-  - **BI / Dashboards**: Metabase, Looker, Tableau reports consuming marts or reporting models.
-  - **Reverse ETL**: Tools like Census or HubSpot/Salesforce syncs consuming mart-level aggregates.
-  - **ML / Feature Stores**: Algorithms consuming mart-level aggregates as training features.
 
 ---
 
