@@ -2,6 +2,31 @@
 
 This project implements the analytics engineering pipeline using DBT for Pipedrive CRM data.
 
+## Getting Started
+
+### 1. Spin up Postgres
+```bash
+docker compose up -d
+```
+*Credentials: `localhost:5432` | User: `admin` | Password: `admin` | DB: `postgres`*
+
+### 2. Setup Environment & Run DBT
+Using `uv` (recommended):
+```bash
+uv venv && source .venv/bin/activate && uv pip install -r pyproject.toml
+```
+Or using `pip`:
+```bash
+pip install dbt-core dbt-postgres
+```
+
+Then run the pipeline:
+```bash
+dbt deps && dbt build
+```
+
+---
+
 ## Project Structure & Architecture
 
 ### 1. Folder Structures & Project Organization
@@ -9,8 +34,8 @@ We have structured the project models according to the [dbt Labs Best Practice G
 - **Staging Layer (`models/staging/`)**: Contains models that have direct 1:1 relationships with our raw source tables. They perform light cleaning, renaming, and casting.
   - Staging SQL models are named using the `stg_<source>_<entity>` convention (e.g., `stg_pipedrive_activity_types.sql`).
   - Staging configuration files are stored in a centralized `configs` subdirectory (`models/staging/configs/stg_pipedrive_activity_types.yml`) to keep configuration files separated from models.
-- **Intermediate Layer (`models/intermediate/`)**: Will contain models representing reusable business logic transformations.
-- **Marts Layer (`models/marts/`)**: Will contain the final presentation and dimension models (such as `rep_sales_funnel_monthly` or `dim_crm_users`).
+- **Intermediate Layer (`models/intermediate/`)**: Contains models representing reusable business logic transformations.
+- **Marts Layer (`models/marts/`)**: Contains the final presentation and dimension models (such as `rep_sales_funnel_monthly` or `dim_crm_users`).
   - Marts models use a **tool-agnostic naming convention** (e.g. `dim_crm_activity_types` instead of `dim_pipedrive_activity_types`). This abstracts downstream models from specific source tooling (Pipedrive) to represent business entities (like CRM) cleanly.
   - Marts configuration files are stored in a centralized `configs` subdirectory (e.g., `models/marts/configs/mart__dim_crm_activity_types.yml`) to keep configuration files separated from models.
 
@@ -20,7 +45,6 @@ We have structured the project models according to the [dbt Labs Best Practice G
 ### 3. DBT Seeds
 - **dbt Seeds**: We use [dbt seeds](https://docs.getdbt.com/docs/build/seeds) to load and manage the CSV data files (`activity_types.csv`, `activity.csv`, `deal_changes.csv`, `fields.csv`, `stages.csv`, and `users.csv`) located under `seeds/` (copied from `raw_data/`).
 - **Dedicated Schema**: These seeds are configured in `dbt_project.yml` to build into a dedicated schema named exactly `s_pipedrive`.
-
 
 ### 4. Tests on Primary Keys
 - Every staging model configures data validation tests on its primary key (e.g., `unique` and `not_null` constraints on `activity_type_id` and `field_id`) in its respective YML configuration file to guarantee data integrity at the entry point of the pipeline.
@@ -73,48 +97,32 @@ To ensure pipeline stability and catch issues before they reach production:
 
 ### 13. dbt Exposures (Downstream Lineage)
 - **Purpose**: dbt Exposures declare downstream consumers of dbt models to complete the DAG lineage beyond dbt itself. This enables `dbt docs` to surface end-to-end data lineage — from raw sources all the way to the final consumer — and makes impact analysis possible (e.g. "which dashboards are affected if I change `fct_crm_deal_changes`?").
-- **Placement**: Exposures are defined in a dedicated [exposures.yml](../models/exposures.yml) at the `models/` root level (rather than inside a specific layer folder) since downstream consumers can depend on models from any layer — not just reporting.
+- **Placement**: Exposures are defined in a dedicated [exposures.yml](file:///Users/jimmypang/AntigravityProjects/dbt_enpal_assessment/models/exposures.yml) at the `models/` root level (rather than inside a specific layer folder) since downstream consumers can depend on models from any layer — not just reporting.
 - **Current Exposure** (`sales_funnel_monthly_dashboard`): Declares the monthly sales funnel dashboard as a consumer of `rep_sales_funnel_monthly`.
 - **Future Exposures** can be added to represent other downstream dependencies, for example:
   - **BI / Dashboards**: Metabase, Looker, Tableau reports consuming marts or reporting models.
-  - **Reverse ETL**: Tools like Census or Hightouch syncing enriched CRM data back to Salesforce/HubSpot.
+  - **Reverse ETL**: Tools like Census or HubSpot/Salesforce syncs consuming mart-level aggregates.
   - **ML / Feature Stores**: Algorithms consuming mart-level aggregates as training features.
 
 ---
 
-## Original Assignment Details
+## Original Assignment Specification
 
-### Setup
+### Funnel Steps (KPIs)
+- **Step 1**: Lead Generation
+- **Step 2**: Qualified Lead
+  - **Step 2.1**: Sales Call 1
+- **Step 3**: Needs Assessment
+  - **Step 3.1**: Sales Call 2
+- **Step 4**: Proposal/Quote Preparation
+- **Step 5**: Negotiation
+- **Step 6**: Closing
+- **Step 7**: Implementation/Onboarding
+- **Step 8**: Follow-up/Customer Success
+- **Step 9**: Renewal/Expansion
 
-1. Download Docker Desktop (if you don’t have installed) using the official website, install and launch.
-2. Fork this Github project to you Github account. Clone the forked repo to your device.
-3. Open your Command Prompt or Terminal, navigate to that folder, and run the command `docker compose up`.
-4. Now you have launched a local Postgres database with the following credentials:
- ```
-    Host: localhost
-    User: admin
-    Password: admin
-    Port: 5432 
- ```
-5. Connect to the db via a preferred tool (e.g. DataGrip, Dbeaver etc)
-6. Install dbt-core and dbt-postgres using pip (if you don’t have) on your preferred environment.
-7. Now you can run `dbt run` with the test model and check public_pipedrive_analytics schema to see the dbt result (with one test model)
-
-### Project
-1. Remove the test model once you make sure it works
-2. Dive deep into the Pipedrive CRM source data to gain a thorough understanding of all its details. (You may also research the Pipedrive CRM tool terms).
-3. Define DBT sources and build the necessary layers organizing the data flow for optimal relevance and maintainability.
-4. Build a reporting model (rep_sales_funnel_monthly) with monthly intervals, incorporating the following funnel steps (KPIs):  
-  &nbsp;&nbsp;&nbsp;Step 1: Lead Generation  
-  &nbsp;&nbsp;&nbsp;Step 2: Qualified Lead  
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Step 2.1: Sales Call 1  
-  &nbsp;&nbsp;&nbsp;Step 3: Needs Assessment  
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Step 3.1: Sales Call 2  
-  &nbsp;&nbsp;&nbsp;Step 4: Proposal/Quote Preparation  
-  &nbsp;&nbsp;&nbsp;Step 5: Negotiation  
-  &nbsp;&nbsp;&nbsp;Step 6: Closing  
-  &nbsp;&nbsp;&nbsp;Step 7: Implementation/Onboarding  
-  &nbsp;&nbsp;&nbsp;Step 8: Follow-up/Customer Success  
-  &nbsp;&nbsp;&nbsp;Step 9: Renewal/Expansion
-5. Column names of the reporting model: `month`, `kpi_name`, `funnel_step`, `deals_count`
-6. “Git commit” all the changes and create a PR to your forked repo (not the original one). Send your repo link to us.
+### Reporting Model Schema
+- `month`
+- `kpi_name`
+- `funnel_step`
+- `deals_count`
