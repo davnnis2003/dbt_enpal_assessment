@@ -6,11 +6,6 @@ WITH
         FROM
             "postgres"."staging"."stg_pipedrive_activities" AS stg_pipedrive_activities
         
-        WHERE
-            
-    stg_pipedrive_activities.due_at_utc >= (SELECT MAX(due_at_utc) FROM "postgres"."marts"."fct_crm_activities")
-
-        
     ),
     activity_types AS (
         SELECT

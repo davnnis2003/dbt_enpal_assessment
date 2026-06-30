@@ -8,7 +8,8 @@ WITH
         SELECT
             *
         FROM
-            {{ source('postgres_public', 'deal_changes') }}
+            -- raw data ingested via dbt seed, not an external source
+            {{ ref('deal_changes') }}
     ),
     renamed AS (
         SELECT
