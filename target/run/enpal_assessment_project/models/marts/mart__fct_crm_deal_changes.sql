@@ -38,8 +38,8 @@ WITH
     deal_created_times AS (
         SELECT
             deal_id,
-            min(changed_at_utc) AS deal_created_at_utc,
-            min(changed_at_berlin) AS deal_created_at_berlin
+            MIN(changed_at_utc) AS deal_created_at_utc,
+            MIN(changed_at_berlin) AS deal_created_at_berlin
         FROM
             deal_changes
         WHERE
@@ -95,16 +95,16 @@ SELECT
     
     -- Structured typed columns (Old)
     CASE 
-        WHEN dc.changed_field_key = 'stage_id' AND dc.old_value ~ '^[0-9]+$' THEN cast(dc.old_value AS integer)
+        WHEN dc.changed_field_key = 'stage_id' AND dc.old_value ~ '^[0-9]+$' THEN CAST(dc.old_value AS integer)
     END AS old_stage_id,
     CASE 
         WHEN dc.changed_field_key = 'stage_id' THEN s_old.stage_name
     END AS old_stage_name,
     CASE 
-        WHEN dc.changed_field_key = 'user_id' AND dc.old_value ~ '^[0-9]+$' THEN cast(dc.old_value AS integer)
+        WHEN dc.changed_field_key = 'user_id' AND dc.old_value ~ '^[0-9]+$' THEN CAST(dc.old_value AS integer)
     END AS old_user_id,
     CASE 
-        WHEN dc.changed_field_key = 'lost_reason' AND dc.old_value ~ '^[0-9]+$' THEN cast(dc.old_value AS integer)
+        WHEN dc.changed_field_key = 'lost_reason' AND dc.old_value ~ '^[0-9]+$' THEN CAST(dc.old_value AS integer)
     END AS old_lost_reason_id,
     CASE 
         WHEN dc.changed_field_key = 'lost_reason' THEN fo_old.option_label
@@ -112,16 +112,16 @@ SELECT
     
     -- Structured typed columns (New)
     CASE 
-        WHEN dc.changed_field_key = 'stage_id' AND dc.new_value ~ '^[0-9]+$' THEN cast(dc.new_value AS integer)
+        WHEN dc.changed_field_key = 'stage_id' AND dc.new_value ~ '^[0-9]+$' THEN CAST(dc.new_value AS integer)
     END AS new_stage_id,
     CASE 
         WHEN dc.changed_field_key = 'stage_id' THEN s_new.stage_name
     END AS new_stage_name,
     CASE 
-        WHEN dc.changed_field_key = 'user_id' AND dc.new_value ~ '^[0-9]+$' THEN cast(dc.new_value AS integer)
+        WHEN dc.changed_field_key = 'user_id' AND dc.new_value ~ '^[0-9]+$' THEN CAST(dc.new_value AS integer)
     END AS new_user_id,
     CASE 
-        WHEN dc.changed_field_key = 'lost_reason' AND dc.new_value ~ '^[0-9]+$' THEN cast(dc.new_value AS integer)
+        WHEN dc.changed_field_key = 'lost_reason' AND dc.new_value ~ '^[0-9]+$' THEN CAST(dc.new_value AS integer)
     END AS new_lost_reason_id,
     CASE 
         WHEN dc.changed_field_key = 'lost_reason' THEN fo_new.option_label
@@ -140,20 +140,20 @@ LEFT JOIN
 LEFT JOIN
     stages AS s_old
     ON dc.changed_field_key = 'stage_id' 
-    AND CASE WHEN dc.old_value ~ '^[0-9]+$' THEN cast(dc.old_value AS integer) END = s_old.stage_id
+    AND CASE WHEN dc.old_value ~ '^[0-9]+$' THEN CAST(dc.old_value AS integer) END = s_old.stage_id
 LEFT JOIN
     field_options AS fo_old
     ON dc.changed_field_key = 'lost_reason' 
-    AND CASE WHEN dc.old_value ~ '^[0-9]+$' THEN cast(dc.old_value AS integer) END = fo_old.option_id
+    AND CASE WHEN dc.old_value ~ '^[0-9]+$' THEN CAST(dc.old_value AS integer) END = fo_old.option_id
     
 -- Joins for New Values
 LEFT JOIN
     stages AS s_new
     ON dc.changed_field_key = 'stage_id' 
-    AND CASE WHEN dc.new_value ~ '^[0-9]+$' THEN cast(dc.new_value AS integer) END = s_new.stage_id
+    AND CASE WHEN dc.new_value ~ '^[0-9]+$' THEN CAST(dc.new_value AS integer) END = s_new.stage_id
 LEFT JOIN
     field_options AS fo_new
     ON dc.changed_field_key = 'lost_reason' 
-    AND CASE WHEN dc.new_value ~ '^[0-9]+$' THEN cast(dc.new_value AS integer) END = fo_new.option_id
+    AND CASE WHEN dc.new_value ~ '^[0-9]+$' THEN CAST(dc.new_value AS integer) END = fo_new.option_id
   );
   
