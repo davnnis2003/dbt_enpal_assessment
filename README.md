@@ -185,6 +185,7 @@ To guarantee long-term pipeline stability, we propose establishing a CI/CD workf
 - **`dbt compile` Checks**: The CI pipeline should run `dbt compile` on every PR to verify syntax correctness, project configuration compliance, and macro resolutions.
 - **Dry-Run in Ephemeral database**: Run modified dbt models against an ephemeral/temporary schema to perform a full dry-run execution and verify query execution.
 - **Pull Request Template**: Enforce a standardized Pull Request template so that all developers document changes, catalog schemas, and list validation results consistently.
+- **Proposed CODEOWNERS Policy**: To open the repository for contributions from other Business Units or non-central data teams safely, we propose using a GitHub `CODEOWNERS` configuration. The central Data Platform team will maintain ownership over core directories (such as `models/staging/` and macros), requiring their explicit approval on PRs, while decentralized teams can be granted ownership over specific domain-based directories.
 
 
 
