@@ -1,12 +1,4 @@
-{
-    {
-        config (
-            materialized = 'view',
-            schema = 'staging',
-            alias = 'stg_pipedrive_activity_types'
-        )
-    }
-}
+
 WITH
     source AS (
         SELECT

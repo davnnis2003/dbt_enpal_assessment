@@ -4,20 +4,24 @@
     
   as (
     
-
-with source as (
-    select * from "postgres"."public"."fields"
-),
-
-renamed as (
-    select
-        cast(id as integer) as field_id,
-        cast(field_key as varchar) as field_key,
-        cast(name as varchar) as field_name,
-        field_value_options
-
-    from source
-)
-
-select * from renamed
+WITH
+    source AS (
+        SELECT
+            *
+        FROM
+            "postgres"."public"."fields"
+    ),
+    renamed AS (
+        SELECT
+            cast(id AS integer) AS field_id,
+            cast(field_key AS varchar) AS field_key,
+            cast(name AS varchar) AS field_name,
+            field_value_options
+        FROM
+            source
+    )
+SELECT
+    *
+FROM
+    renamed
   );

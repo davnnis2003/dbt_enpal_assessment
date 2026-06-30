@@ -1,12 +1,8 @@
-{
-    {
-        config (
-            materialized = 'view',
-            schema = 'staging',
-            alias = 'stg_pipedrive_fields'
-        )
-    }
-}
+{{ config(
+    materialized='view',
+    schema='staging',
+    alias='stg_pipedrive_fields'
+) }}
 WITH
     source AS (
         SELECT
