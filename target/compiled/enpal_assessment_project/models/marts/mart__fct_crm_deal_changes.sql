@@ -47,6 +47,10 @@ WITH
             END AS _new_value_as_int
         FROM
             deal_changes_raw AS deal_changes_raw 
+        WHERE
+                    
+    deal_changes_raw.changed_at_utc >= (SELECT MAX(changed_at_utc) FROM "postgres"."marts"."fct_crm_deal_changes")
+ 
     ),
     fields AS (
         SELECT
