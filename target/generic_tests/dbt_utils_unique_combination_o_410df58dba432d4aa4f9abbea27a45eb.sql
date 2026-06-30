@@ -1,0 +1,1 @@
+{{ dbt_utils.test_unique_combination_of_columns(combination_of_columns=["month","funnel_step"], model=get_where_subquery(ref('rep_sales_funnel_monthly'))) }}

@@ -1,7 +1,11 @@
 version: 2
 
+# NOTE: This source definition is not actively used in staging models.
+# Raw Pipedrive data is ingested via dbt seeds (seeds/src_pipedrive.yml) and
+# referenced with ref() rather than source(). This file is retained for
+# documentation purposes only.
 sources:
-  - name: postgres_public
+  - name: pipedrive
     database: postgres
     schema: s_pipedrive
     tables:

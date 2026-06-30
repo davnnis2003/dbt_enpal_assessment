@@ -4,6 +4,7 @@ WITH
         SELECT
             *
         FROM
+            -- raw data ingested via dbt seed, not an external source
             "postgres"."s_pipedrive"."users"
     ),
     renamed AS (

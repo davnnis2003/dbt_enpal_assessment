@@ -1,0 +1,28 @@
+version: 2
+
+seeds:
+  - name: activity
+    config:
+      schema: s_pipedrive
+
+  - name: activity_types
+    config:
+      schema: s_pipedrive
+
+  - name: deal_changes
+    config:
+      schema: s_pipedrive
+
+  - name: fields
+    config:
+      schema: s_pipedrive
+      column_types:
+        field_value_options: jsonb
+
+  - name: stages
+    config:
+      schema: s_pipedrive
+
+  - name: users
+    config:
+      schema: s_pipedrive

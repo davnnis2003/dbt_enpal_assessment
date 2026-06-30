@@ -1,0 +1,1 @@
+{{ test_accepted_values(column_name="funnel_step", model=get_where_subquery(ref('rep_sales_funnel_monthly')), values=["1","2","2.1","3","3.1","4","5","6","7","8","9"]) }}
