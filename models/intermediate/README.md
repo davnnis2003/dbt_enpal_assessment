@@ -1,37 +1,28 @@
-# Intermediate Layer
+# Intermediate Layer Guidelines
 
-This directory contains **intermediate dbt models** — an **optional supporting layer** for the marts layer, not a mandatory part of every dbt project.
+This guide outlines our standards and design principles for the **Intermediate Layer** (`models/intermediate/`), following the official **[dbt Labs Best Practice Guide on Intermediate Models](https://docs.getdbt.com/guides/best-practices/how-we-structure/4-intermediate)**.
 
-## Purpose
+The intermediate layer serves as a stepping stone between the Staging and Marts layers. It is used to modularize complex business logic, perform joins, and pre-aggregate data before assembling data marts.
 
-The intermediate layer is a convenience layer used to **abstract shared or heavy business logic** out of individual mart models. Models should only be promoted here when there is a clear practical reason — most commonly:
+---
 
-1. **Shared across more than one mart** (e.g. two different fact tables both need the same join or complex aggregation) — avoiding copy-paste logic duplication.
-2. **Computationally heavy** (e.g. expensive window functions over large tables, multi-step unnesting) — materializing once so downstream marts don't each re-run the expensive computation.
+## 1. Core Principles
 
-If neither of these conditions applies, logic belongs directly in the mart model as a CTE. The intermediate layer should never be created just for the sake of having it.
+- **Modular Transformations**: Used to isolate reusable transformations (e.g. complex joins, pivoting, filtering, or aggregations) that would otherwise be duplicated across multiple marts.
+- **Internal Layer Only**: Intermediate models are built for other dbt models to reference. They are **not** meant to be queried directly by BI tools or end-users.
+- **Materialization**: By default, intermediate models are materialized as **views** or **ephemeral** models to keep the database tidy, unless performance requirements mandate building them as tables.
 
-## Materialization Strategy
+---
 
-| Scenario | Recommended Materialization |
-|---|---|
-| Reused logic, lightweight | `ephemeral` (default) — compiled inline, no table overhead |
-| Reused logic, heavy / slow | `table` — materializes once, reused by downstream models without recomputing |
+## 2. Structure & Conventions
 
-The project-wide default in `dbt_project.yml` is set to `ephemeral` for this layer:
-```yaml
-intermediate:
-  +materialized: ephemeral
+### Directory Layout
+- **Models**: Placed directly under `models/intermediate/` (e.g. `int_crm_users_joined.sql`).
+- **Configurations**: Centralized in config files within the directory (e.g. `models/intermediate/int_crm_users_joined.yml`).
+
+### Naming Convention
+Intermediate models follow the pattern:
 ```
-
-Override to `table` at the model level using `{{ config(materialized='table') }}` when the CTE is expensive enough to warrant it.
-
-## Naming Convention
-
-Intermediate models follow the `int_<entity>_<transformation>.sql` naming pattern, e.g.:
-- `int_crm_deal_stage_transitions.sql`
-- `int_crm_activity_enriched.sql`
-
-## Current State
-
-No intermediate models are needed at this time — the business logic for the current marts is straightforward enough to flow directly from the staging layer. As the project grows and marts start sharing logic, models will be added here.
+int_<entity>_<verb_or_logic>.sql
+```
+*Example:* `int_crm_users_joined.sql`
