@@ -10,7 +10,11 @@ WITH
         SELECT
             *
         FROM
-            {{ ref('stg_pipedrive_activities') }}
+            {{ ref('stg_pipedrive_activities') }} AS stg_pipedrive_activities
+        {% if is_incremental() %}
+        WHERE
+            {{ get_incremental_date_filter('stg_pipedrive_activities.due_at_utc', 'due_at_utc') }}
+        {% endif %}
     ),
     activity_types AS (
         SELECT
@@ -33,10 +37,6 @@ FROM
 LEFT JOIN
     activity_types AS activity_types
     ON activities.activity_type_category = activity_types.activity_type_category
-{% if is_incremental() %}
-WHERE
-    {{ get_incremental_date_filter('activities.due_at_utc', 'due_at_utc') }}
-{% endif %}
 
 -- TODO: Explore JOIN with Deals Changes fact table later
 
