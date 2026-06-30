@@ -271,6 +271,7 @@ dbt_enpal_assessment/
 ---
 
 # Engineering Conventions
+This section documents the project-wide development guidelines, data transformations standards, and testing configurations agreed upon by the data team to ensure consistency, reliability, and reproducibility across our analytics pipeline.
 
 ## Schema Configurations & Custom Macros
 We use custom macros to control database schemas and query building behaviors:
