@@ -315,6 +315,7 @@ To guarantee long-term pipeline stability, we propose establishing a CI/CD workf
   - Set up local [pre-commit](https://pre-commit.com/) hooks to run `sqlfluff lint` and formatting checks locally before code is committed, shifting quality checks left.
 - **`dbt compile` Checks**: The CI pipeline should run `dbt compile` on every PR to verify syntax correctness, project configuration compliance, and macro resolutions.
 - **Dry-Run in Ephemeral database**: Run modified dbt models against an ephemeral/temporary schema to perform a full dry-run execution and verify query execution.
+- **Automated Versioning & Releases (`semantic-release`)**: Propose implementing [semantic-release](https://github.com/semantic-release/semantic-release) to automate the package release workflow. By parsing commit messages following the Conventional Commits specification, it automatically determines version bumps (major, minor, patch), generates changelogs, publishes release tags, and updates model package versions in a reproducible way.
 
 ## Proposed Repository Governance
 To open the repository for contributions from other Business Units or non-central data teams safely, we propose the following governance mechanisms:
