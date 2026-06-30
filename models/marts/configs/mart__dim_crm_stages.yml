@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: mart__dim_crm_stages
+    description: Tool-agnostic CRM dimension table for deal stages.
+    columns:
+      - name: stage_id
+        description: Primary key of the stage.
+        tests:
+          - unique
+          - not_null
