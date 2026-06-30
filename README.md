@@ -48,18 +48,6 @@ This project adheres to modern analytics engineering standards by combining **[D
 
 Our practices focus on modularity, clear grain definition, schema separation, tool-agnostic interfaces in presentation layers, and incremental processing for performance.
 
-We partition our logic into distinct layers, each with dedicated responsibilities:
-- **ODS (Operational Data Store) Ingestion Layer**: Handles raw data connections and ingestion into the warehouse database:
-  - **Source Layer (`models/sources.yml`)**: Declares raw connection namespaces for external database tables. *(Note: Not utilized in this project as raw inputs are static CSVs loaded via the Seed layer).*
-  - **Seed Layer (`seeds/`)**: Manages the ingestion of small, static lookup datasets directly from version-controlled CSV files. See the [Seeds Layer Guide](seeds/README.md) for details on static inputs and configurations.
-- **Staging Layer (`models/staging/`)**: Contains models that have direct 1:1 relationships with our raw source tables. They perform light cleaning, renaming, casting, and timezone conversion. See the [Staging Architecture Guide](models/staging/README.md) for details on naming conventions, directory layout, and configurations.
-- **Intermediate Layer (`models/intermediate/`)**: Contains models representing reusable business logic transformations. See the [Intermediate Architecture Guide](models/intermediate/README.md) for details on modular logic boundaries.
-- **Marts Layer (`models/marts/`)**: Contains the business-ready presentation models. See the [Marts Architecture Guide](models/marts/README.md) for details on our design principles and mart classifications:
-  - **Dimension Tables (`dim_`)**: Descriptive entities (e.g. `dim_crm_users`).
-  - **Fact Tables (`fct_`)**: Action/event-based metrics (e.g. `fct_crm_activities`).
-- **Reporting Layer (`models/reporting/`)**: Dedicated presentation layer positioned downstream of the Marts layer, aggregating metrics specifically for BI dashboards and final reporting (e.g. `rep_sales_funnel_monthly`).
-- **Exposure Layer (`models/exposures.yml`)**: Defines downstream data consumers (e.g., specific dashboards or reports) to document end-to-end lineage within the dbt DAG.
-
 ```mermaid
 graph LR
     subgraph ODS ["ODS Layer"]
@@ -77,7 +65,7 @@ graph LR
         MartsFct["Marts Fact (fct_)"]
     end
 
-    subgraph Presentation ["Presentation Layer"]
+    subgraph Activation ["Activation Layer"]
         Reporting["Reporting Models (rep_)"]
         Exposures["Exposures (exposures.yml)"]
     end
@@ -98,6 +86,19 @@ graph LR
     style Transformation fill:#fbf,stroke:#333,stroke-width:1px
     style Presentation fill:#bfb,stroke:#333,stroke-width:1px
 ```
+
+We partition our logic into distinct layers, each with dedicated responsibilities:
+- **ODS (Operational Data Store) Ingestion Layer**: Handles raw data connections and ingestion into the warehouse database:
+  - **Source Layer (`models/sources.yml`)**: Declares raw connection namespaces for external database tables. *(Note: Not utilized in this project as raw inputs are static CSVs loaded via the Seed layer).*
+  - **Seed Layer (`seeds/`)**: Manages the ingestion of small, static lookup datasets directly from version-controlled CSV files. See the [Seeds Layer Guide](seeds/README.md) for details on static inputs and configurations.
+- **Staging Layer (`models/staging/`)**: Contains models that have direct 1:1 relationships with our raw source tables. They perform light cleaning, renaming, casting, and timezone conversion. See the [Staging Architecture Guide](models/staging/README.md) for details on naming conventions, directory layout, and configurations.
+- **Intermediate Layer (`models/intermediate/`)**: Contains models representing reusable business logic transformations. See the [Intermediate Architecture Guide](models/intermediate/README.md) for details on modular logic boundaries.
+- **Marts Layer (`models/marts/`)**: Contains the business-ready presentation models. See the [Marts Architecture Guide](models/marts/README.md) for details on our design principles and mart classifications:
+  - **Dimension Tables (`dim_`)**: Descriptive entities (e.g. `dim_crm_users`).
+  - **Fact Tables (`fct_`)**: Action/event-based metrics (e.g. `fct_crm_activities`).
+- **Reporting Layer (`models/reporting/`)**: Dedicated presentation layer positioned downstream of the Marts layer, aggregating metrics specifically for BI dashboards and final reporting (e.g. `rep_sales_funnel_monthly`).
+- **Exposure Layer (`models/exposures.yml`)**: Defines downstream data consumers (e.g., specific dashboards or reports) to document end-to-end lineage within the dbt DAG.
+
 
 ![dbt pipeline reporting lineage](docs/dbt_reporting_lineage.png)
 
