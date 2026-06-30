@@ -167,11 +167,11 @@ dbt_enpal_assessment/
 
 # Governance & Guardrails
 
-## 6. Gitignoring the `target/` Directory (Considerations)
+## Proposed Gitignoring Policy for `target/` Directory
 - We considered adding the `target/` folder to `.gitignore` since committing artifacts of every dbt invocation (such as compiled SQL, manifest files, and run results) is not useful and adds unnecessary noise to the repository.
 - However, we chose to keep it in git tracking for **interview purposes only** to make it easy to inspect generated files without requiring local database runs. In a production environment, we would absolutely ignore `target/` unless a very clear use case exists.
 
-## 7. PII & GDPR Compliance
+## PII & GDPR Compliance
 - **GDPR Policy**: The staging users model (`stg_pipedrive_users`) ingests PII columns (`user_name`, `email`) directly from raw sources to capture the full source schema.
 - **Internal Employees Assumption**: All users are assumed to be Metrify internal employees. Therefore, PII (name and email) is kept directly in the main dimension table (`dim_crm_users`) without a separate restricted PII schema or access request process.
 - **Data Retention Policy**: To comply with GDPR guidelines, user data in `dim_crm_users` is proposed to be excluded or deleted if it is older than 6 months (based on `modified_at_utc`). The exact details of this mechanism must be aligned with the Data Protection Officer (DPO), specifically:
@@ -179,10 +179,12 @@ dbt_enpal_assessment/
   - Deciding between physical deletion (hard/soft delete in the database) vs. logical filtering at query/view level.
   - Ensuring upstream/downstream impact analysis is done for historical tracking and reporting purposes.
 
-## 8. CI/CD Best Practices
-To ensure pipeline stability and catch issues before they reach production:
-- **`dbt compile` Checks**: The CI pipeline should run `dbt compile` on every Pull Request to verify syntax correctness, project configuration compliance, and macro resolutions.
-- **Dry-Run in Ephemeral Database/Schema**: Before merging to production, the CI pipeline should run the modified dbt models against an ephemeral/temporary schema or database (or cloned environment) to perform a full dry-run execution. This verifies that all queries execute successfully against the database engine.
+## Proposed CI/CD Best Practices & Governance
+To guarantee long-term pipeline stability, we propose establishing a CI/CD workflow that catches syntax, logic, and style issues on every pull request:
+- **Linting (`sqlfluff`)**: Integrate a SQL linter (like [sqlfluff](https://sqlfluff.com/)) in the CI pipeline to enforce SQL style guides, casing conventions, and trailing comma rules automatically.
+- **`dbt compile` Checks**: The CI pipeline should run `dbt compile` on every PR to verify syntax correctness, project configuration compliance, and macro resolutions.
+- **Dry-Run in Ephemeral database**: Run modified dbt models against an ephemeral/temporary schema to perform a full dry-run execution and verify query execution.
+- **Pull Request Template**: Enforce a standardized Pull Request template so that all developers document changes, catalog schemas, and list validation results consistently.
 
 
 
