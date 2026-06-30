@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: staging__activity_types
+  - name: stg_pipedrive_activity_types
     description: Staged activity types from the raw source.
     columns:
       - name: activity_type_id

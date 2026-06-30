@@ -1,4 +1,42 @@
-## Setup
+# DBT Pipedrive Analytics Project
+
+This project implements the analytics engineering pipeline using DBT for Pipedrive CRM data.
+
+## Project Structure & Architecture
+
+### 1. Folder Structures & Project Organization
+We have structured the project models according to the [dbt Labs Best Practice Guide on project structure](https://docs.getdbt.com/guides/best-practices/how-we-structure/1-guide-overview):
+- **Staging Layer (`models/staging/`)**: Contains models that have direct 1:1 relationships with our raw source tables. They perform light cleaning, renaming, and casting.
+  - Staging SQL models are named using the `stg_<source>_<entity>` convention (e.g., `stg_pipedrive_activity_types.sql`).
+  - Staging configuration files are stored in a centralized `configs` subdirectory (`models/staging/configs/stg_pipedrive_activity_types.yml`) to keep configuration files separated from models.
+- **Intermediate Layer (`models/intermediate/`)**: Will contain models representing reusable business logic transformations.
+- **Marts Layer (`models/marts/`)**: Will contain the final presentation models (such as `rep_sales_funnel_monthly`).
+
+### 2. Schema Configurations
+- Staging models are configured to build into a dedicated schema named exactly `staging` (instead of appending a target prefix). This is accomplished via a custom macro overriding `generate_schema_name` ([generate_schema_name.sql](file:///Users/jimmypang/AntigravityProjects/dbt_enpal_assessment/macros/generate_schema_name.sql)).
+
+### 3. DBT Seeds (Considerations)
+- **dbt Seeds**: We considered using [dbt seeds](https://docs.getdbt.com/docs/build/seeds) to import manual CSV files located in `raw_data/` directly into the database. However, since the docker environment initializes and loads these datasets automatically via database scripts (`init.sql`), we declared them as raw sources instead.
+
+### 4. Tests on Primary Keys
+- Every staging model configures data validation tests on its primary key (e.g., `unique` and `not_null` constraints on `activity_type_id` and `field_id`) in its respective YML configuration file to guarantee data integrity at the entry point of the pipeline.
+
+### 5. DBT Documentation
+- Table and column descriptions are documented in the model YAML files. You can generate and view the interactive documentation site using:
+  ```bash
+  dbt docs generate
+  dbt docs serve
+  ```
+
+### 6. Gitignoring the `target/` Directory (Considerations)
+- We considered adding the `target/` folder to `.gitignore` since committing artifacts of every dbt invocation (such as compiled SQL, manifest files, and run results) is not useful and adds unnecessary noise to the repository.
+- However, we chose to keep it in git tracking for **interview purposes only** to make it easy to inspect generated files without requiring local database runs. In a production environment, we would absolutely ignore `target/` unless a very clear use case exists.
+
+---
+
+## Original Assignment Details
+
+### Setup
 
 1. Download Docker Desktop (if you don’t have installed) using the official website, install and launch.
 2. Fork this Github project to you Github account. Clone the forked repo to your device.
@@ -9,12 +47,12 @@
     User: admin
     Password: admin
     Port: 5432 
-```
+ ```
 5. Connect to the db via a preferred tool (e.g. DataGrip, Dbeaver etc)
 6. Install dbt-core and dbt-postgres using pip (if you don’t have) on your preferred environment.
 7. Now you can run `dbt run` with the test model and check public_pipedrive_analytics schema to see the dbt result (with one test model)
 
-## Project
+### Project
 1. Remove the test model once you make sure it works
 2. Dive deep into the Pipedrive CRM source data to gain a thorough understanding of all its details. (You may also research the Pipedrive CRM tool terms).
 3. Define DBT sources and build the necessary layers organizing the data flow for optimal relevance and maintainability.
