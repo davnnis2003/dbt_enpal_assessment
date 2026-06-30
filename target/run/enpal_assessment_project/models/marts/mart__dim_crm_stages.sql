@@ -2,7 +2,7 @@
   
     
 
-  create  table "postgres"."pipedrive_analytics"."mart__dim_crm_stages__dbt_tmp"
+  create  table "postgres"."pipedrive_analytics"."dim_crm_stages__dbt_tmp"
   
   
     as

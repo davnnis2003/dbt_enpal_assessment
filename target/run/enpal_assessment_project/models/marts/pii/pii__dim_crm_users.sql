@@ -2,7 +2,7 @@
   
     
 
-  create  table "postgres"."pii"."pii__dim_crm_users__dbt_tmp"
+  create  table "postgres"."pii"."dim_crm_users__dbt_tmp"
   
   
     as

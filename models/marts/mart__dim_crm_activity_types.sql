@@ -1,5 +1,6 @@
 {{ config(
-    materialized='table'
+    materialized='table',
+    alias='dim_crm_activity_types'
 ) }}
 SELECT
     activity_type_id,

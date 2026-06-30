@@ -1,5 +1,6 @@
 {{ config(
-    materialized='table'
+    materialized='table',
+    alias='dim_crm_users'
 ) }}
 SELECT
     user_id,

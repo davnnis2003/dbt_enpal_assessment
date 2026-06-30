@@ -1,6 +1,7 @@
 {{ config(
     materialized='table',
-    schema='pii'
+    schema='pii',
+    alias='dim_crm_users'
 ) }}
 SELECT
     user_id,

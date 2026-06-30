@@ -1,5 +1,6 @@
 {{ config(
-    materialized='table'
+    materialized='table',
+    alias='dim_crm_stages'
 ) }}
 SELECT
     stage_id,
