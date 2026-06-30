@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: reporting__sales_funnel_monthly
+  - name: rep_sales_funnel_monthly
     description: Monthly sales funnel reporting table showing how many unique deals entered each funnel step.
     columns:
       - name: month
