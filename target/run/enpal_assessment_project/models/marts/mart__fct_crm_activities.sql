@@ -9,15 +9,33 @@
   
   (
     
+WITH
+    activities AS (
+        SELECT
+            *
+        FROM
+            "postgres"."staging"."stg_pipedrive_activities"
+    ),
+    activity_types AS (
+        SELECT
+            *
+        FROM
+            "postgres"."marts"."dim_crm_activity_types"
+    )
 SELECT
-    activity_id,
-    activity_type_category,
-    assigned_user_id,
-    deal_id,
-    is_done,
-    due_at_utc,
-    due_at_berlin
+    activities.activity_id,
+    activities.activity_type_category,
+    activity_types.activity_type_id,
+    activity_types.activity_type_name,
+    activities.assigned_user_id,
+    activities.deal_id,
+    activities.is_done,
+    activities.due_at_utc,
+    activities.due_at_berlin
 FROM
-    "postgres"."staging"."stg_pipedrive_activities"
+    activities
+LEFT JOIN
+    activity_types
+    ON activities.activity_type_category = activity_types.activity_type_category
   );
   
