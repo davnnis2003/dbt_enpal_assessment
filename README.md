@@ -229,6 +229,7 @@ We partition our logic into distinct layers, each with dedicated responsibilitie
 - **Exposure Layer (`models/exposures.yml`)**: Defines downstream data consumers (e.g., specific dashboards or reports) to document end-to-end lineage within the dbt DAG. This completes the DAG lineage beyond dbt, enabling impact analysis (e.g. knowing which dashboards are affected if a mart table changes).
   - *Current Exposure*: `sales_funnel_monthly_dashboard` (declares the monthly sales funnel dashboard as a consumer of `rep_sales_funnel_monthly`).
   - *Future Exposures*: Can represent Metabase/Looker/Tableau dashboards, Census/Hightouch reverse ETL syncs, or ML feature stores.
+- **Analysis Layer (`analyses/`)**: Stores analytical scratchpads and ad-hoc queries. These files are compiled by dbt (resolving references and macros) but are not materialized in the database as models. See the [Analyses Layer Guide](analyses/README.md) for usage and commands.
 
 
 ![dbt pipeline reporting lineage](docs/dbt_reporting_lineage.png)
@@ -238,6 +239,10 @@ We structure our files in the repository as follows:
 ```text
 dbt_enpal_assessment/
 ├── seeds/                         # Raw static lookup files (CSV)
+├── analyses/                      # Analytical scratchpad queries (compiled, not materialized)
+│   ├── README.md                  # Documentation on how to run and compile analyses
+│   ├── deal_changes_by_deal.sql   # Query to view chronological changes for specific deal IDs
+│   └── deal_changes_field_keys.sql # Query to count occurrences of different changed fields
 ├── models/
 │   ├── exposures.yml              # Downstream consumer definitions
 │   │
