@@ -271,6 +271,7 @@ dbt_enpal_assessment/
 ---
 
 # Engineering Conventions
+This section documents the project-wide development guidelines, data transformations standards, and testing configurations agreed upon by the data team to ensure consistency, reliability, and reproducibility across our analytics pipeline.
 
 ## Schema Configurations & Custom Macros
 We use custom macros to control database schemas and query building behaviors:
@@ -321,6 +322,12 @@ To open the repository for contributions from other Business Units or non-centra
 - **Pull Request Template**: Enforce a standardized Pull Request template so that all developers document changes, catalog schemas, and list validation results consistently.
 - **CODEOWNERS Policy**: Use a GitHub `CODEOWNERS` configuration. The central Data Platform team maintains ownership over core directories (such as `models/staging/` and macros), requiring their explicit approval on PRs, while decentralized teams are granted ownership over specific domain-based directories.
 - **Model Ownership Metadata**: Enforce the use of dbt `meta` properties at the model configuration level to document ownership directly in the code (e.g. configuring `+meta: {owner: "@team-sales-analytics"}` in the schema configurations). This maps code objects to specific Slack channels or teams for operational support and metadata cataloging.
+
+
+## Proposed Data Observability
+To monitor data health and build pipeline trust at scale, we propose implementing a data observability framework.
+- **dbt Elementary (Open-Source/Lightweight)**: We propose integrating [Elementary](https://www.elementary-data.com/) to automatically collect execution logs, compile run durations, and track test history. It enables volume anomaly checks (e.g. tracking row count drift), schema drift alerts, Slack/Teams incident notifications, and generates a visual reporting dashboard.
+- **Monte Carlo (Enterprise-Grade)**: As the project scales across multiple business units, we propose evaluating an enterprise observability platform like [Monte Carlo](https://www.montecarlodata.com/). It provides automated end-to-end data lineage across the warehouse and BI layers, machine learning-driven anomaly detection on tables without manual threshold configurations, and centralized incident management workbenches.
 
 
 
