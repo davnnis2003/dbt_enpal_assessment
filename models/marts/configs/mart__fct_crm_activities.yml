@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: mart__fct_crm_activities
+    description: Tool-agnostic CRM fact table for activities.
+    columns:
+      - name: activity_id
+        description: Primary key of the activity.
+        tests:
+          - unique
+          - not_null
+      - name: activity_type_category
+        description: The category/type of the activity (e.g. meeting, follow_up).
+      - name: activity_type_id
+        description: The ID of the activity type.
+      - name: activity_type_name
+        description: The name of the activity type.
+      - name: assigned_user_id
+        description: Foreign key reference to the user assigned to this activity.
+      - name: deal_id
+        description: Foreign key reference to the deal associated with this activity.
+      - name: is_done
+        description: Boolean indicating whether the activity is completed.
+      - name: due_at_utc
+        description: The date and time when the activity is due in UTC timezone.
+      - name: due_at_berlin
+        description: The date and time when the activity is due converted to Europe/Berlin timezone.
