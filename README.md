@@ -28,6 +28,10 @@ We have structured the project models according to the [dbt Labs Best Practice G
   dbt docs serve
   ```
 
+### 6. Gitignoring the `target/` Directory (Considerations)
+- We considered adding the `target/` folder to `.gitignore` since committing artifacts of every dbt invocation (such as compiled SQL, manifest files, and run results) is not useful and adds unnecessary noise to the repository.
+- However, we chose to keep it in git tracking for **interview purposes only** to make it easy to inspect generated files without requiring local database runs. In a production environment, we would absolutely ignore `target/` unless a very clear use case exists.
+
 ---
 
 ## Original Assignment Details
