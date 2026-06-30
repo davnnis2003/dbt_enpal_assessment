@@ -67,7 +67,6 @@ We have structured the project models according to the dbt Labs directory guidel
 dbt_enpal_assessment/
 ├── seeds/                         # Raw static lookup files (CSV)
 ├── models/
-│   ├── sources.yml                # Raw sources definition (Not used here)
 │   ├── exposures.yml              # Downstream consumer definitions
 │   │
 │   ├── staging/                   # Ingestion Layer (1:1 with source tables)
