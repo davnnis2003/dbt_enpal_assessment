@@ -65,6 +65,11 @@ To ensure pipeline stability and catch issues before they reach production:
 - **`dbt compile` Checks**: The CI pipeline should run `dbt compile` on every Pull Request to verify syntax correctness, project configuration compliance, and macro resolutions.
 - **Dry-Run in Ephemeral Database/Schema**: Before merging to production, the CI pipeline should run the modified dbt models against an ephemeral/temporary schema or database (or cloned environment) to perform a full dry-run execution. This verifies that all queries execute successfully against the database engine.
 
+### 12. Reporting Layer & Funnel Summary Table
+- **Reporting Schema**: Configured a dedicated custom schema `reporting` using dbt custom schemas mapping to separate reporting models.
+- **Daily Funnel Summary (`mart__sum_crm_daily_summary`)**: Implemented a daily summary model to aggregate stage transition events and key activities (Sales Call 1 and Sales Call 2) by deal.
+- **Monthly Funnel Report (`reporting__sales_funnel_monthly`)**: Combines daily summary records into monthly intervals, mapping stages and activities to the requested funnel steps (`1`, `2`, `2.1`, `3`, `3.1`, `4`, `5`, `6`, `7`, `8`, `9`), and computes the exact count of unique deals that reached each step.
+
 ---
 
 ## Original Assignment Details

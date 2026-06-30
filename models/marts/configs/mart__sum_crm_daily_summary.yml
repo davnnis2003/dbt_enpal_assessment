@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: mart__sum_crm_daily_summary
+    description: Daily summary table capturing deal entries into different funnel stages and activities.
+    columns:
+      - name: summary_date
+        description: The date of the funnel entry in Europe/Berlin timezone.
+        tests:
+          - not_null
+      - name: deal_id
+        description: Foreign key reference to the deal.
+        tests:
+          - not_null
+      - name: funnel_step
+        description: The step representation in the sales funnel (e.g. '1', '2', '2.1').
+        tests:
+          - not_null
+      - name: kpi_name
+        description: The descriptive name of the funnel step.
+        tests:
+          - not_null

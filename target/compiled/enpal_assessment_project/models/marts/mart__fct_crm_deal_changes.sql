@@ -1,14 +1,4 @@
-{
-    {
-        config (
-            materialized = 'incremental',
-            schema = 'marts',
-            alias = 'fct_crm_deal_changes',
-            unique_key = 'deal_change_id',
-            on_schema_change = 'sync_all_columns'
-        )
-    }
-}
+
 WITH
     deal_changes_raw AS (
         SELECT
@@ -57,6 +47,10 @@ WITH
             END AS _new_value_as_int
         FROM
             deal_changes_raw AS deal_changes_raw 
+        WHERE
+                    
+    deal_changes_raw.changed_at_utc >= (SELECT MAX(changed_at_utc) FROM "postgres"."marts"."fct_crm_deal_changes")
+ 
     ),
     fields AS (
         SELECT
