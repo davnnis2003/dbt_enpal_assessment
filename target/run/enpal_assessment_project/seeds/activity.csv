@@ -1,9 +1,7 @@
 
     
     
-    
-    create table "postgres"."s_pipedrive"."activity" ("activity_id" integer,"type" text,"assigned_to_user" integer,"deal_id" integer,"done" boolean,"due_to" timestamp without time zone)
-  ;
+    truncate table "postgres"."s_pipedrive"."activity";
     -- dbt seed --
     
           insert into "postgres"."s_pipedrive"."activity" ("activity_id", "type", "assigned_to_user", "deal_id", "done", "due_to") values

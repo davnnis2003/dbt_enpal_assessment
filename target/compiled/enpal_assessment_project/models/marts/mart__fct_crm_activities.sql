@@ -4,7 +4,13 @@ WITH
         SELECT
             *
         FROM
-            "postgres"."staging"."stg_pipedrive_activities"
+            "postgres"."staging"."stg_pipedrive_activities" AS stg_pipedrive_activities
+        
+        WHERE
+            
+    stg_pipedrive_activities.due_at_utc >= (SELECT MAX(due_at_utc) FROM "postgres"."marts"."fct_crm_activities")
+
+        
     ),
     activity_types AS (
         SELECT
@@ -13,19 +19,19 @@ WITH
             "postgres"."marts"."dim_crm_activity_types"
     )
 SELECT
-    activities.activity_id,
-    activities.activity_type_category,
-    activity_types.activity_type_id,
-    activity_types.activity_type_name,
-    activities.assigned_user_id,
-    activities.deal_id,
-    activities.is_done,
-    activities.due_at_utc,
-    activities.due_at_berlin
+    activities.activity_id AS activity_id,
+    activities.activity_type_category AS activity_type_category,
+    activity_types.activity_type_id AS activity_type_id,
+    activity_types.activity_type_name AS activity_type_name,
+    activities.assigned_user_id AS assigned_user_id,
+    activities.deal_id AS deal_id,
+    activities.is_done AS is_done,
+    activities.due_at_utc AS due_at_utc,
+    activities.due_at_berlin AS due_at_berlin
 FROM
-    activities
+    activities AS activities
 LEFT JOIN
-    activity_types
+    activity_types AS activity_types
     ON activities.activity_type_category = activity_types.activity_type_category
 
 -- TODO: Explore JOIN with Deals Changes fact table later

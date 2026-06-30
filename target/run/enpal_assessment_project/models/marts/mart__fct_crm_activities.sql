@@ -1,43 +1,18 @@
 
-  
+      
+        
+        
+        delete from "postgres"."marts"."fct_crm_activities" as DBT_INTERNAL_DEST
+        where (activity_id) in (
+            select distinct activity_id
+            from "fct_crm_activities__dbt_tmp130602910869" as DBT_INTERNAL_SOURCE
+        );
+
     
 
-  create  table "postgres"."marts"."fct_crm_activities__dbt_tmp"
-  
-  
-    as
-  
-  (
-    
-WITH
-    activities AS (
-        SELECT
-            *
-        FROM
-            "postgres"."staging"."stg_pipedrive_activities"
-    ),
-    activity_types AS (
-        SELECT
-            *
-        FROM
-            "postgres"."marts"."dim_crm_activity_types"
+    insert into "postgres"."marts"."fct_crm_activities" ("activity_id", "activity_type_category", "activity_type_id", "activity_type_name", "assigned_user_id", "deal_id", "is_done", "due_at_utc", "due_at_berlin")
+    (
+        select "activity_id", "activity_type_category", "activity_type_id", "activity_type_name", "assigned_user_id", "deal_id", "is_done", "due_at_utc", "due_at_berlin"
+        from "fct_crm_activities__dbt_tmp130602910869"
     )
-SELECT
-    activities.activity_id,
-    activities.activity_type_category,
-    activity_types.activity_type_id,
-    activity_types.activity_type_name,
-    activities.assigned_user_id,
-    activities.deal_id,
-    activities.is_done,
-    activities.due_at_utc,
-    activities.due_at_berlin
-FROM
-    activities
-LEFT JOIN
-    activity_types
-    ON activities.activity_type_category = activity_types.activity_type_category
-
--- TODO: Explore JOIN with Deals Changes fact table later
-  );
   

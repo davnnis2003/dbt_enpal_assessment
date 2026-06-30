@@ -1,9 +1,7 @@
 
     
     
-    
-    create table "postgres"."s_pipedrive"."users" ("id" integer,"name" text,"email" text,"modified" text)
-  ;
+    truncate table "postgres"."s_pipedrive"."users";
     -- dbt seed --
     
           insert into "postgres"."s_pipedrive"."users" ("id", "name", "email", "modified") values
