@@ -38,9 +38,7 @@ Our practices focus on modularity, clear grain definition, schema separation, to
 
 ## Folder Structures & Project Organization
 We have structured the project models according to the dbt Labs directory guidelines:
-- **Staging Layer (`models/staging/`)**: Contains models that have direct 1:1 relationships with our raw source tables. They perform light cleaning, renaming, and casting.
-  - Staging SQL models are named using the `stg_<source>_<entity>` convention (e.g., `stg_pipedrive_activity_types.sql`).
-  - Staging configuration files are stored in a centralized `configs` subdirectory (`models/staging/configs/stg_pipedrive_activity_types.yml`) to keep configuration files separated from models.
+- **Staging Layer (`models/staging/`)**: Contains models that have direct 1:1 relationships with our raw source tables. They perform light cleaning, renaming, casting, and timezone conversion. See the [Staging Architecture Guide](../models/staging/README.md) for details on naming conventions, directory layout, and configurations.
 - **Intermediate Layer (`models/intermediate/`)**: Contains models representing reusable business logic transformations.
 - **Marts Layer (`models/marts/`)**: Contains the final presentation and dimension models (such as `rep_sales_funnel_monthly` or `dim_crm_users`). See the [Marts Architecture Guide](../models/marts/README.md) for details on our core design principles and mart classifications.
   - Marts models use a **tool-agnostic naming convention** (e.g. `dim_crm_activity_types` instead of `dim_pipedrive_activity_types`). This abstracts downstream models from specific source tooling (Pipedrive) to represent business entities (like CRM) cleanly.
