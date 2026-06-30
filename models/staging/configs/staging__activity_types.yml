@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: staging__activity_types
+    description: Staged activity types from the raw source.
+    columns:
+      - name: activity_type_id
+        description: The primary key of the activity type.
+        tests:
+          - unique
+          - not_null
+      - name: activity_type_name
+        description: The name of the activity type (e.g. Sales Call 1).
+      - name: is_active
+        description: Boolean indicating whether the activity type is active.
+      - name: activity_type_category
+        description: The category/type of the activity (e.g. meeting, follow_up).
