@@ -1,5 +1,6 @@
 {{ config(
     materialized='table',
+    schema='marts',
     alias='dim_crm_activity_types'
 ) }}
 SELECT
