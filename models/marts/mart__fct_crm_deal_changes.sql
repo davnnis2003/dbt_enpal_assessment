@@ -25,6 +25,18 @@ WITH
         FROM
             {{ ref('stg_pipedrive_deal_changes') }} AS stg_pipedrive_deal_changes
     ),
+    deal_created_times AS (
+        SELECT
+            deal_changes_raw.deal_id AS deal_id,
+            MIN(deal_changes_raw.changed_at_utc) AS deal_created_at_utc,
+            MIN(deal_changes_raw.changed_at_berlin) AS deal_created_at_berlin
+        FROM
+            deal_changes_raw AS deal_changes_raw
+        WHERE
+            deal_changes_raw.changed_field_key = 'add_time'
+        GROUP BY
+            deal_changes_raw.deal_id
+    ),
     deal_changes AS (
         SELECT
             deal_changes_raw.deal_change_id AS deal_change_id,
@@ -42,18 +54,10 @@ WITH
             END AS _new_value_as_int
         FROM
             deal_changes_raw AS deal_changes_raw
-    ),
-    deal_created_times AS (
-        SELECT
-            deal_changes.deal_id AS deal_id,
-            MIN(deal_changes.changed_at_utc) AS deal_created_at_utc,
-            MIN(deal_changes.changed_at_berlin) AS deal_created_at_berlin
-        FROM
-            deal_changes AS deal_changes
+        {% if is_incremental() %}
         WHERE
-            deal_changes.changed_field_key = 'add_time'
-        GROUP BY
-            deal_changes.deal_id
+            {{ get_incremental_date_filter('deal_changes_raw.changed_at_utc', 'changed_at_utc') }}
+        {% endif %}
     ),
     fields AS (
         SELECT
@@ -163,7 +167,3 @@ LEFT JOIN
     lost_reasons AS lost_reasons_new
     ON deal_changes.changed_field_key = 'lost_reason' 
     AND deal_changes._new_value_as_int = lost_reasons_new.option_id
-{% if is_incremental() %}
-WHERE
-    {{ get_incremental_date_filter('deal_changes.changed_at_utc', 'changed_at_utc') }}
-{% endif %}
