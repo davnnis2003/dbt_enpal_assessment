@@ -61,7 +61,7 @@ We partition our logic into distinct layers, each with dedicated responsibilitie
 
 ![dbt pipeline reporting lineage](docs/dbt_reporting_lineage.png)
 
-## Folder Structures & Project Organization
+# Folder Structures & Project Organization
 We structure our files in the repository as follows:
 ```text
 dbt_enpal_assessment/
@@ -70,8 +70,9 @@ dbt_enpal_assessment/
 │   ├── exposures.yml              # Downstream consumer definitions
 │   │
 │   ├── staging/                   # Ingestion Layer (1:1 with source tables)
-│   │   ├── configs/               # Centralized staging schema configuration
-│   │   └── s_pipedrive__stg_*.sql # Standardized casting & cleaning models
+│   │   └── pipedrive/             # Subfolder per source application (e.g. Pipedrive)
+│   │       ├── configs/           # Centralized staging schema configuration
+│   │       └── s_pipedrive__stg_*.sql # Standardized casting & cleaning models
 │   │
 │   ├── intermediate/              # Modular Layer (transitional reusable logic)
 │   │   └── int_*.sql              # Joins and pre-aggregations
@@ -83,6 +84,10 @@ dbt_enpal_assessment/
 │   │
 │   └── reporting/                 # Downstream Presentation Layer
 │       └── rep_*.sql              # BI-ready monthly funnel reports
+├── dbt_project.yml                # Main configuration file for the dbt project
+├── packages.yml                   # Lists external dbt packages (e.g. dbt_utils)
+├── profiles.yml                   # Connection configurations for the warehouse target
+└── docker-compose.yml             # Manages local Postgres test database service configuration
 ```
 
 ---
