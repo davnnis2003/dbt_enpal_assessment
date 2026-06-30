@@ -1,15 +1,15 @@
 # Intermediate Layer
 
-This directory contains **intermediate dbt models** — reusable transformation logic that sits between the staging and marts layers.
+This directory contains **intermediate dbt models** — an **optional supporting layer** for the marts layer, not a mandatory part of every dbt project.
 
 ## Purpose
 
-The intermediate layer exists to **abstract shared business logic** away from individual mart models. Any transformation that is:
+The intermediate layer is a convenience layer used to **abstract shared or heavy business logic** out of individual mart models. Models should only be promoted here when there is a clear practical reason — most commonly:
 
-1. **Used by more than one mart** (e.g. two different fact tables both need the same join or aggregation), or
-2. **Computationally heavy** (e.g. window functions over large tables, complex unnesting),
+1. **Shared across more than one mart** (e.g. two different fact tables both need the same join or complex aggregation) — avoiding copy-paste logic duplication.
+2. **Computationally heavy** (e.g. expensive window functions over large tables, multi-step unnesting) — materializing once so downstream marts don't each re-run the expensive computation.
 
-...should be extracted from the mart model and placed here as a named intermediate model. This keeps mart models clean, avoids logic duplication, and makes the shared logic easier to test and maintain independently.
+If neither of these conditions applies, logic belongs directly in the mart model as a CTE. The intermediate layer should never be created just for the sake of having it.
 
 ## Materialization Strategy
 
