@@ -139,21 +139,21 @@ dbt_enpal_assessment/
 
 ---
 
-## Project Architecture & Core Decisions
+# Engineering Conventions
 
-### 1. Schema Configurations
+## 1. Schema Configurations
 - Staging models are configured to build into a dedicated schema named exactly `staging` (instead of appending a target prefix). This is accomplished via a custom macro overriding `generate_schema_name` ([generate_schema_name.sql](../macros/generate_schema_name.sql)).
 
-### 4. Tests on Primary Keys
+## 2. Primary Key Validation & Testing
 - Every staging model configures data validation tests on its primary key (e.g., `unique` and `not_null` constraints on `activity_type_id` and `field_id`) in its respective YML configuration file to guarantee data integrity at the entry point of the pipeline.
 
-### 7. Timezone Handling
+## 3. Timezone Handling
 - **Timezone Conversion**: Metrify currently operates exclusively in the Germany market and the team is located in Berlin. Source data from Pipedrive is provided in UTC by default. To align analytics and reports with local operations, all UTC timestamps are converted to the `Europe/Berlin` timezone in the staging layer models (e.g. `due_at` in [stg_pipedrive_activities.sql](file:///Users/jimmypang/AntigravityProjects/dbt_enpal_assessment/models/staging/stg_pipedrive_activities.sql)).
 
-### 9. JSON Unnesting (CRM Fields)
+## 4. JSON Unnesting (CRM Fields)
 - **JSON Options Unnesting**: Staged CRM field definitions include a JSON column `field_value_options` containing an array of key-value pairs (id and label options). To hide the complexity of JSON arrays from business stakeholders and ensure query performance at scale, we unnested these values into a dedicated `dim_crm_field_options` table (configured as a separate dimension in the marts layer). The raw JSON column is excluded from the main `dim_crm_fields` dimension table.
 
-### 10. Incremental Materialization Strategy
+## 5. Incremental Materialization Strategy
 - **Incremental Materialization**: The heavy marts fact tables (`mart__fct_crm_activities` and `mart__fct_crm_deal_changes`) are materialized as `incremental` to optimize query performance and reduce processing costs.
 - **Schema Evolution Policy**:
   - The project-wide default is configured in `dbt_project.yml` as `+on_schema_change: "append_new_columns"`. This default is chosen because automatically syncing column removals or renames in production is risky; it should remain a manual, intentional action. Silent column drops or renames can easily break downstream dependencies, such as reporting dashboards, BI tools, or other dependent dbt models.
@@ -163,12 +163,11 @@ dbt_enpal_assessment/
   - In `mart__fct_crm_activities.sql`, we filter records early within the `activities` CTE before joining to `activity_types`.
   - In `mart__fct_crm_deal_changes.sql`, we compute the `LAG()` function over the full history in `deal_changes_raw` (retaining window calculation correctness), and then apply the incremental filter directly in the `deal_changes` CTE. This ensures downstream joins are only processed for the new incremental rows.
 
-### 6. Gitignoring the `target/` Directory (Considerations)
+## 6. Gitignoring the `target/` Directory (Considerations)
 - We considered adding the `target/` folder to `.gitignore` since committing artifacts of every dbt invocation (such as compiled SQL, manifest files, and run results) is not useful and adds unnecessary noise to the repository.
 - However, we chose to keep it in git tracking for **interview purposes only** to make it easy to inspect generated files without requiring local database runs. In a production environment, we would absolutely ignore `target/` unless a very clear use case exists.
 
-
-### 8. PII & GDPR Compliance
+## 7. PII & GDPR Compliance
 - **GDPR Policy**: The staging users model (`stg_pipedrive_users`) ingests PII columns (`user_name`, `email`) directly from raw sources to capture the full source schema.
 - **Internal Employees Assumption**: All users are assumed to be Metrify internal employees. Therefore, PII (name and email) is kept directly in the main dimension table (`dim_crm_users`) without a separate restricted PII schema or access request process.
 - **Data Retention Policy**: To comply with GDPR guidelines, user data in `dim_crm_users` is proposed to be excluded or deleted if it is older than 6 months (based on `modified_at_utc`). The exact details of this mechanism must be aligned with the Data Protection Officer (DPO), specifically:
@@ -176,7 +175,7 @@ dbt_enpal_assessment/
   - Deciding between physical deletion (hard/soft delete in the database) vs. logical filtering at query/view level.
   - Ensuring upstream/downstream impact analysis is done for historical tracking and reporting purposes.
 
-### 11. CI/CD Best Practices
+## 8. CI/CD Best Practices
 To ensure pipeline stability and catch issues before they reach production:
 - **`dbt compile` Checks**: The CI pipeline should run `dbt compile` on every Pull Request to verify syntax correctness, project configuration compliance, and macro resolutions.
 - **Dry-Run in Ephemeral Database/Schema**: Before merging to production, the CI pipeline should run the modified dbt models against an ephemeral/temporary schema or database (or cloned environment) to perform a full dry-run execution. This verifies that all queries execute successfully against the database engine.
