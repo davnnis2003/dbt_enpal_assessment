@@ -27,3 +27,5 @@ FROM
 LEFT JOIN
     activity_types
     ON activities.activity_type_category = activity_types.activity_type_category
+
+-- TODO: Explore JOIN with Deals Changes fact table later
