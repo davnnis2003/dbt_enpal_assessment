@@ -1,0 +1,40 @@
+{
+    "path_count": 133,
+    "parsed_path_count": 1,
+    "static_analysis_path_count": 0,
+    "static_analysis_parsed_path_count": 0,
+    "is_partial_parse_enabled": true,
+    "is_static_analysis_enabled": true,
+    "read_files_elapsed": 0.15593837504275143,
+    "load_macros_elapsed": 0.0003389168996363878,
+    "parse_project_elapsed": 0.04271945799700916,
+    "patch_sources_elapsed": 0.013613167218863964,
+    "process_manifest_elapsed": 0.0005030420143157244,
+    "load_all_elapsed": 0.36801691609434783,
+    "projects": [
+        {
+            "project_name": "enpal_assessment_project",
+            "elapsed": 0.042673083022236824,
+            "parsers": [
+                {
+                    "parser": "test",
+                    "elapsed": 0.04266287502832711,
+                    "parsed_path_count": 1
+                }
+            ],
+            "parsed_path_count": 1
+        },
+        {
+            "project_name": "dbt_postgres",
+            "elapsed": 0,
+            "parsers": [],
+            "parsed_path_count": 0
+        },
+        {
+            "project_name": "dbt",
+            "elapsed": 0,
+            "parsers": [],
+            "parsed_path_count": 0
+        }
+    ]
+}
