@@ -61,18 +61,5 @@ GROUP BY
     union_entries.funnel_step,
     union_entries.kpi_name
 ORDER BY
-    month ASC,
-    CASE
-        WHEN union_entries.funnel_step = '1' THEN 1
-        WHEN union_entries.funnel_step = '2' THEN 2
-        WHEN union_entries.funnel_step = '2.1' THEN 3
-        WHEN union_entries.funnel_step = '3' THEN 4
-        WHEN union_entries.funnel_step = '3.1' THEN 5
-        WHEN union_entries.funnel_step = '4' THEN 6
-        WHEN union_entries.funnel_step = '5' THEN 7
-        WHEN union_entries.funnel_step = '6' THEN 8
-        WHEN union_entries.funnel_step = '7' THEN 9
-        WHEN union_entries.funnel_step = '8' THEN 10
-        WHEN union_entries.funnel_step = '9' THEN 11
-        ELSE 12
-    END ASC
+    1,
+    2
