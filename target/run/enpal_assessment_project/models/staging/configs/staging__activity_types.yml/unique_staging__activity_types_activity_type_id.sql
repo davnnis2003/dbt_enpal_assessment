@@ -15,7 +15,7 @@ select
     activity_type_id as unique_field,
     count(*) as n_records
 
-from "postgres"."staging"."staging__activity_types"
+from "postgres"."staging"."stg_pipedrive_activity_types"
 where activity_type_id is not null
 group by activity_type_id
 having count(*) > 1

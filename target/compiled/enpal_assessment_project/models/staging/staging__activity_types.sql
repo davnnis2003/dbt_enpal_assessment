@@ -1,3 +1,5 @@
+
+
 with source as (
     select * from "postgres"."public"."activity_types"
 ),

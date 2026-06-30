@@ -1,9 +1,11 @@
 
-  create view "postgres"."staging"."staging__activity_types__dbt_tmp"
+  create view "postgres"."staging"."stg_pipedrive_activity_types__dbt_tmp"
     
     
   as (
-    with source as (
+    
+
+with source as (
     select * from "postgres"."public"."activity_types"
 ),
 

@@ -1,3 +1,9 @@
+{{ config(
+    materialized='view',
+    schema='staging',
+    alias='stg_pipedrive_activity_types'
+) }}
+
 with source as (
     select * from {{ source('postgres_public', 'activity_types') }}
 ),
