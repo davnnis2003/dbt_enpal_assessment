@@ -1,9 +1,7 @@
 
     
     
-    
-    create table "postgres"."s_pipedrive"."deal_changes" ("deal_id" integer,"change_time" timestamp without time zone,"changed_field_key" text,"new_value" text)
-  ;
+    truncate table "postgres"."s_pipedrive"."deal_changes";
     -- dbt seed --
     
           insert into "postgres"."s_pipedrive"."deal_changes" ("deal_id", "change_time", "changed_field_key", "new_value") values
