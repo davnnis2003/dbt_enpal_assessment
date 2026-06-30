@@ -84,7 +84,7 @@ graph LR
     style ODS fill:#f9f,stroke:#333,stroke-width:1px
     style Ingestion fill:#bbf,stroke:#333,stroke-width:1px
     style Transformation fill:#fbf,stroke:#333,stroke-width:1px
-    style Presentation fill:#bfb,stroke:#333,stroke-width:1px
+    style Activation fill:#bfb,stroke:#333,stroke-width:1px
 ```
 
 We partition our logic into distinct layers, each with dedicated responsibilities:
