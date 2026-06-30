@@ -4,6 +4,10 @@ This project implements the analytics engineering pipeline using DBT for Pipedri
 
 ## Getting Started
 
+### 0. Prerequisites
+- Install and run [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+- Install `uv` (recommended) or `pip` on your machine.
+
 ### 1. Spin up Postgres
 ```bash
 docker compose up -d
