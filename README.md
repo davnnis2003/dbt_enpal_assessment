@@ -29,6 +29,18 @@ Then run the pipeline:
 dbt deps && dbt build
 ```
 
+### 3. View DBT Documentation (Optional)
+Generate the catalog metadata and launch the interactive documentation site:
+```bash
+uv run dbt docs generate && uv run dbt docs serve
+```
+Once started, view the pipeline catalog and lineage graphs in your browser at: http://localhost:8080
+
+![dbt catalog documentation](docs/dbt_catalog.png)
+
+
+
+
 ---
 
 # Data Modeling Practices
