@@ -60,6 +60,45 @@ We partition our logic into distinct layers, each with dedicated responsibilitie
 - **Reporting Layer (`models/reporting/`)**: Dedicated presentation layer positioned downstream of the Marts layer, aggregating metrics specifically for BI dashboards and final reporting (e.g. `rep_sales_funnel_monthly`).
 - **Exposure Layer (`models/exposures.yml`)**: Defines downstream data consumers (e.g., specific dashboards or reports) to document end-to-end lineage within the dbt DAG.
 
+```mermaid
+graph LR
+    subgraph ODS ["ODS Layer"]
+        Seeds["Seeds (.csv)"]
+        Sources["Sources (.yml)"]
+    end
+
+    subgraph Ingestion ["Ingestion Layer"]
+        Staging["Staging Models (stg_)"]
+    end
+
+    subgraph Transformation ["Transformation Layer"]
+        Intermediate["Intermediate Models (int_)"]
+        MartsDim["Marts Dimension (dim_)"]
+        MartsFct["Marts Fact (fct_)"]
+    end
+
+    subgraph Presentation ["Presentation Layer"]
+        Reporting["Reporting Models (rep_)"]
+        Exposures["Exposures (exposures.yml)"]
+    end
+
+    Seeds --> Staging
+    Sources -.-> Staging
+    Staging --> Intermediate
+    Staging --> MartsDim
+    Staging --> MartsFct
+    Intermediate --> MartsDim
+    Intermediate --> MartsFct
+    MartsDim --> Reporting
+    MartsFct --> Reporting
+    Reporting --> Exposures
+    
+    style ODS fill:#f9f,stroke:#333,stroke-width:1px
+    style Ingestion fill:#bbf,stroke:#333,stroke-width:1px
+    style Transformation fill:#fbf,stroke:#333,stroke-width:1px
+    style Presentation fill:#bfb,stroke:#333,stroke-width:1px
+```
+
 ![dbt pipeline reporting lineage](docs/dbt_reporting_lineage.png)
 
 # Folder Structures & Project Organization
