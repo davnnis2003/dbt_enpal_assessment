@@ -1,5 +1,5 @@
 
-  create view "postgres"."public_staging"."staging__activity_types__dbt_tmp"
+  create view "postgres"."staging"."staging__activity_types__dbt_tmp"
     
     
   as (
