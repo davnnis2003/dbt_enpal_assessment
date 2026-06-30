@@ -4,18 +4,11 @@
     alias='rep_sales_funnel_monthly'
 ) }}
 
--- NOTE: Dense vs. Sparse Reporting Table
--- The current implementation produces a "sparse" table: only month × funnel_step combinations
--- that have at least one deal are present. Months with no activity for a given step will be
--- absent entirely, which can cause issues in dashboards that rely on a complete grid
--- (e.g. bar/line charts expecting every funnel step to appear for every month).
---
--- If a "dense" backbone is needed, restructure this model as follows:
---   1. Build a CTE `all_months` using GENERATE_SERIES over the full date range.
---   2. Build a CTE `all_funnel_steps` as a static VALUES list of all 11 funnel steps.
---   3. CROSS JOIN `all_months` × `all_funnel_steps` to produce every possible combination.
---   4. LEFT JOIN the actual aggregated deals_count onto that backbone.
---   5. Use COALESCE(deals_count, 0) so missing combinations default to 0 instead of NULL.
+-- NOTE: Dense Reporting Table (Backbone Approach)
+-- This model uses a CROSS JOIN backbone of all months × all funnel steps to ensure every
+-- combination appears in the output, even if no deals were recorded for that step that month.
+-- Missing combinations default to deals_count = 0 via COALESCE, making this safe for dashboards
+-- that expect a complete grid (e.g. time-series bar/line charts).
 
 WITH
     stage_entries AS (
@@ -61,18 +54,74 @@ WITH
             activity_entries.kpi_name AS kpi_name
         FROM
             activity_entries AS activity_entries
+    ),
+    -- Generate one row per calendar month across the full observed date range
+    all_months AS (
+        SELECT
+            CAST(DATE_TRUNC('month', generate_series.month_start) AS DATE) AS month
+        FROM
+            GENERATE_SERIES(
+                (SELECT MIN(DATE_TRUNC('month', stage_entries.month)) FROM stage_entries AS stage_entries),
+                (SELECT MAX(DATE_TRUNC('month', stage_entries.month)) FROM stage_entries AS stage_entries),
+                INTERVAL '1 month'
+            ) AS generate_series(month_start)
+    ),
+    -- Static list of all 11 known funnel steps and their display names
+    all_funnel_steps AS (
+        SELECT
+            all_funnel_steps.funnel_step AS funnel_step,
+            all_funnel_steps.kpi_name AS kpi_name
+        FROM (
+            VALUES
+                ('1',   'Lead Generation'),
+                ('2',   'Qualified lead'),
+                ('2.1', 'Sales Call 1'),
+                ('3',   'Needs Assessment'),
+                ('3.1', 'Sales Call 2'),
+                ('4',   'Proposal/Quote Preparation'),
+                ('5',   'Negotiation'),
+                ('6',   'Closing'),
+                ('7',   'Implementation/Onboarding'),
+                ('8',   'Follow-up/Customer Success'),
+                ('9',   'Renewal/Expansion')
+        ) AS all_funnel_steps(funnel_step, kpi_name)
+    ),
+    -- Backbone: every possible month × funnel_step combination
+    backbone AS (
+        SELECT
+            all_months.month AS month,
+            all_funnel_steps.funnel_step AS funnel_step,
+            all_funnel_steps.kpi_name AS kpi_name
+        FROM
+            all_months AS all_months
+        CROSS JOIN
+            all_funnel_steps AS all_funnel_steps
+    ),
+    -- Actual aggregated counts from observed data
+    aggregated AS (
+        SELECT
+            union_entries.month AS month,
+            union_entries.funnel_step AS funnel_step,
+            union_entries.kpi_name AS kpi_name,
+            COUNT(DISTINCT union_entries.deal_id) AS deals_count
+        FROM
+            union_entries AS union_entries
+        GROUP BY
+            union_entries.month,
+            union_entries.funnel_step,
+            union_entries.kpi_name
     )
 SELECT
-    union_entries.month AS month,
-    union_entries.funnel_step AS funnel_step,
-    union_entries.kpi_name AS kpi_name,
-    COUNT(DISTINCT union_entries.deal_id) AS deals_count
+    backbone.month AS month,
+    backbone.funnel_step AS funnel_step,
+    backbone.kpi_name AS kpi_name,
+    COALESCE(aggregated.deals_count, 0) AS deals_count
 FROM
-    union_entries AS union_entries
-GROUP BY
-    union_entries.month,
-    union_entries.funnel_step,
-    union_entries.kpi_name
+    backbone AS backbone
+LEFT JOIN
+    aggregated AS aggregated
+    ON backbone.month = aggregated.month
+    AND backbone.funnel_step = aggregated.funnel_step
 ORDER BY
     1,
     2

@@ -68,7 +68,7 @@ To ensure pipeline stability and catch issues before they reach production:
 ### 12. Reporting Layer & Monthly Funnel Report
 - **Reporting Schema**: Configured a dedicated custom schema `reporting` using dbt custom schemas mapping to separate reporting models.
 - **Monthly Funnel Report (`rep_sales_funnel_monthly`)**: Directly aggregates stage transition events and key activities (Sales Call 1 and Sales Call 2) into monthly intervals, mapping them to the requested funnel steps (`1`, `2`, `2.1`, `3`, `3.1`, `4`, `5`, `6`, `7`, `8`, `9`), and computes the exact count of unique deals that entered each step.
-- **Sparse vs. Dense Reporting Table**: The current model is "sparse" — only month × funnel_step combinations with at least one deal are emitted. If the dashboard requires a complete grid (e.g. every funnel step present for every month, with `deals_count = 0` for missing entries), the model can be extended with a `CROSS JOIN` backbone of all months × all funnel steps, followed by a `LEFT JOIN` on the actual aggregates and `COALESCE(deals_count, 0)`.
+- **Dense Reporting Table (Backbone Approach)**: The model uses a `CROSS JOIN` backbone of all observed calendar months × all 11 funnel steps to guarantee a complete grid in the output. Steps with no deals in a given month emit `deals_count = 0` via `COALESCE`, making the table safe for dashboards relying on full month × funnel_step coverage (e.g. time-series charts).
 - **Future Enhancements (dbt Packages)**: Considered adding external dbt packages (e.g., `dbt_utils` for tests like `unique_combination_of_columns` or helper macros), but skipped installing them to keep the project setup simple and clean for this interview.
 
 ---
