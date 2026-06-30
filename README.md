@@ -323,6 +323,12 @@ To open the repository for contributions from other Business Units or non-centra
 - **Model Ownership Metadata**: Enforce the use of dbt `meta` properties at the model configuration level to document ownership directly in the code (e.g. configuring `+meta: {owner: "@team-sales-analytics"}` in the schema configurations). This maps code objects to specific Slack channels or teams for operational support and metadata cataloging.
 
 
+## Proposed Data Observability
+To monitor data health and build pipeline trust at scale, we propose implementing a data observability framework.
+- **dbt Elementary (Open-Source/Lightweight)**: We propose integrating [Elementary](https://www.elementary-data.com/) to automatically collect execution logs, compile run durations, and track test history. It enables volume anomaly checks (e.g. tracking row count drift), schema drift alerts, Slack/Teams incident notifications, and generates a visual reporting dashboard.
+- **Monte Carlo (Enterprise-Grade)**: As the project scales across multiple business units, we propose evaluating an enterprise observability platform like [Monte Carlo](https://www.montecarlodata.com/). It provides automated end-to-end data lineage across the warehouse and BI layers, machine learning-driven anomaly detection on tables without manual threshold configurations, and centralized incident management workbenches.
+
+
 
 ---
 
