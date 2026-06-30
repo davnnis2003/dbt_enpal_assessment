@@ -62,6 +62,30 @@ We have structured the project models according to the dbt Labs directory guidel
 - **Reporting Layer (`models/reporting/`)**: Dedicated presentation layer positioned downstream of the Marts layer, aggregating metrics specifically for BI dashboards and final reporting (e.g. `rep_sales_funnel_monthly`).
 - **Exposure Layer (`models/exposures.yml`)**: Defines downstream data consumers (e.g., specific dashboards or reports) to document end-to-end lineage within the dbt DAG.
 
+
+```text
+dbt_enpal_assessment/
+├── seeds/                         # Raw static lookup files (CSV)
+├── models/
+│   ├── sources.yml                # Raw sources definition (Not used here)
+│   ├── exposures.yml              # Downstream consumer definitions
+│   │
+│   ├── staging/                   # Ingestion Layer (1:1 with source tables)
+│   │   ├── configs/               # Centralized staging schema configuration
+│   │   └── s_pipedrive__stg_*.sql # Standardized casting & cleaning models
+│   │
+│   ├── intermediate/              # Modular Layer (transitional reusable logic)
+│   │   └── int_*.sql              # Joins and pre-aggregations
+│   │
+│   ├── marts/                     # Core Marts Layer (presentation layer)
+│   │   ├── configs/               # Centralized marts configuration
+│   │   ├── dim_*.sql              # Dimension tables (CRM entities)
+│   │   └── fct_*.sql              # Fact tables (Process events)
+│   │
+│   └── reporting/                 # Downstream Presentation Layer
+│       └── rep_*.sql              # BI-ready monthly funnel reports
+```
+
 ---
 
 ## Project Architecture & Core Decisions
