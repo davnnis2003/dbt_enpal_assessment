@@ -13,6 +13,10 @@ models:
         description: Reference to the deal.
         tests:
           - not_null
+      - name: deal_created_at_utc
+        description: Timestamp when the deal was created (UTC).
+      - name: deal_created_at_berlin
+        description: Timestamp when the deal was created (Europe/Berlin).
       - name: changed_at_utc
         description: Timestamp when the change occurred (UTC).
       - name: changed_at_berlin

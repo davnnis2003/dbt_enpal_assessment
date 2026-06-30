@@ -10,6 +10,9 @@
   (
     
 
+-- TODO: Make this model incremental later to optimize run time.
+
+
 WITH
     deal_changes AS (
         SELECT
@@ -31,6 +34,18 @@ WITH
             ) AS old_value
         FROM
             deal_changes
+    ),
+    deal_created_times AS (
+        SELECT
+            deal_id,
+            min(changed_at_utc) AS deal_created_at_utc,
+            min(changed_at_berlin) AS deal_created_at_berlin
+        FROM
+            deal_changes
+        WHERE
+            changed_field_key = 'add_time'
+        GROUP BY
+            deal_id
     ),
     fields AS (
         SELECT
@@ -55,6 +70,8 @@ WITH
 SELECT
     dc.deal_change_id,
     dc.deal_id,
+    dct.deal_created_at_utc,
+    dct.deal_created_at_berlin,
     dc.changed_at_utc,
     dc.changed_at_berlin,
     dc.changed_field_key,
@@ -112,6 +129,9 @@ SELECT
 
 FROM
     deal_changes_with_lag AS dc
+LEFT JOIN
+    deal_created_times AS dct
+    ON dc.deal_id = dct.deal_id
 LEFT JOIN
     fields AS f
     ON dc.changed_field_key = f.field_key
