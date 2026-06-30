@@ -1,0 +1,1 @@
+{{ test_not_null(column_name="kpi_name", model=get_where_subquery(ref('rep_sales_funnel_monthly'))) }}

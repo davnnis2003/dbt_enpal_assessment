@@ -1,14 +1,10 @@
-{
-    {
-        config (
-            materialized = 'incremental',
-            schema = 'marts',
-            alias = 'fct_crm_deal_changes',
-            unique_key = 'deal_change_id',
-            on_schema_change = 'sync_all_columns'
-        )
-    }
-}
+{{ config(
+    materialized='incremental',
+    schema='marts',
+    alias='fct_crm_deal_changes',
+    unique_key='deal_change_id',
+    on_schema_change='sync_all_columns'
+) }}
 WITH
     deal_changes_raw AS (
         SELECT
@@ -58,14 +54,7 @@ WITH
         FROM
             deal_changes_raw AS deal_changes_raw {% if is_incremental () %}
         WHERE
-            {
-                {
-                    get_incremental_date_filter (
-                        'deal_changes_raw.changed_at_utc',
-                        'changed_at_utc'
-                    )
-                }
-            } {% endif %}
+                    {{ get_incremental_date_filter('deal_changes_raw.changed_at_utc', 'changed_at_utc') }} {% endif %}
     ),
     fields AS (
         SELECT

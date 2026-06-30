@@ -1,0 +1,16 @@
+version: 2
+
+exposures:
+  - name: sales_funnel_monthly_dashboard
+    type: dashboard
+    maturity: medium
+    description: >
+      Monthly CRM sales funnel dashboard tracking how many unique deals entered
+      each funnel step (Lead Generation → Renewal/Expansion) per calendar month.
+      Consumes rep_sales_funnel_monthly which uses a dense backbone to guarantee
+      all 11 funnel steps appear for every month, even when deals_count = 0.
+    depends_on:
+      - ref('rep_sales_funnel_monthly')
+    owner:
+      name: Jimmy Pang
+      email: analytics@metrify.com

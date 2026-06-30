@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: rep_sales_funnel_monthly
+    description: Monthly sales funnel reporting table showing how many unique deals entered each funnel step.
+    columns:
+      - name: month
+        description: Start of the month date for the aggregation.
+        tests:
+          - not_null
+      - name: funnel_step
+        description: Funnel step representation (e.g. '1', '2.1').
+        tests:
+          - not_null
+      - name: kpi_name
+        description: Description/name of the funnel step/KPI.
+        tests:
+          - not_null
+      - name: deals_count
+        description: Unique count of deals that entered this step during the month.
+        tests:
+          - not_null

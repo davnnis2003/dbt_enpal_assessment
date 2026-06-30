@@ -40,6 +40,9 @@ models:
     marts:
       +materialized: table
       +schema: marts
+    reporting:
+      +materialized: table
+      +schema: reporting
 
 seeds:
   enpal_assessment_project:
