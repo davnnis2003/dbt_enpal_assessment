@@ -1,0 +1,25 @@
+
+  create view "postgres"."staging"."stg_pipedrive_stages__dbt_tmp"
+    
+    
+  as (
+    
+WITH
+    source AS (
+        SELECT
+            *
+        FROM
+            "postgres"."public"."stages"
+    ),
+    renamed AS (
+        SELECT
+            cast(stage_id AS integer) AS stage_id,
+            cast(stage_name AS varchar) AS stage_name
+        FROM
+            source
+    )
+SELECT
+    *
+FROM
+    renamed
+  );
