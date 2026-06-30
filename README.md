@@ -181,7 +181,9 @@ dbt_enpal_assessment/
 
 ## Proposed CI/CD Pipeline
 To guarantee long-term pipeline stability, we propose establishing a CI/CD workflow that catches syntax, logic, and style issues on every pull request:
-- **Linting (`sqlfluff`)**: Integrate a SQL linter (like [sqlfluff](https://sqlfluff.com/)) in the CI pipeline to enforce SQL style guides, casing conventions, and trailing comma rules automatically.
+- **Linting & Code Quality (`sqlfluff` & `pre-commit`)**: 
+  - Integrate a SQL linter (like [sqlfluff](https://sqlfluff.com/)) in the remote CI pipeline to enforce SQL styling rules automatically.
+  - Set up local [pre-commit](https://pre-commit.com/) hooks to run `sqlfluff lint` and formatting checks locally before code is committed, shifting quality checks left.
 - **`dbt compile` Checks**: The CI pipeline should run `dbt compile` on every PR to verify syntax correctness, project configuration compliance, and macro resolutions.
 - **Dry-Run in Ephemeral database**: Run modified dbt models against an ephemeral/temporary schema to perform a full dry-run execution and verify query execution.
 
