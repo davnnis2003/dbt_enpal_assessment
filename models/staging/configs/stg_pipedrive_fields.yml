@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: stg_pipedrive_fields
+    description: Staged fields table from Pipedrive.
+    columns:
+      - name: field_id
+        description: The primary key of the field.
+        tests:
+          - unique
+          - not_null
+      - name: field_key
+        description: The key identifying the field.
+      - name: field_name
+        description: The name/label of the field.
+      - name: field_value_options
+        description: The JSON array options for the field values.

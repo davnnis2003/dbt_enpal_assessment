@@ -1,11 +1,12 @@
-{{ config(
-    materialized='view',
-    schema='staging',
-    alias='stg_pipedrive_activity_types'
-) }}
+
+  create view "postgres"."staging"."stg_pipedrive_activity_types__dbt_tmp"
+    
+    
+  as (
+    
 
 with source as (
-    select * from {{ source('postgres_public', 'activity_types') }}
+    select * from "postgres"."public"."activity_types"
 ),
 
 renamed as (
@@ -23,3 +24,4 @@ renamed as (
 )
 
 select * from renamed
+  );
