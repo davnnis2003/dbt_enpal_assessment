@@ -96,7 +96,7 @@ We partition our logic into distinct layers, each with dedicated responsibilitie
 - **Marts Layer (`models/marts/`)**: Contains the business-ready presentation models. See the [Marts Architecture Guide](models/marts/README.md) for details on our design principles and mart classifications:
   - **Dimension Tables (`dim_`)**: Descriptive entities (e.g. `dim_crm_users`).
   - **Fact Tables (`fct_`)**: Action/event-based metrics (e.g. `fct_crm_activities`).
-- **Reporting Layer (`models/reporting/`)**: Dedicated presentation layer positioned downstream of the Marts layer, aggregating metrics specifically for BI dashboards and final reporting (e.g. `rep_sales_funnel_monthly`).
+- **Reporting Layer (`models/reporting/`)**: Dedicated presentation layer positioned downstream of the Marts layer, aggregating metrics specifically for BI dashboards and final reporting (e.g. `rep_sales_funnel_monthly`). See the [Reporting Architecture Guide](models/reporting/README.md) for details on custom schemas, dense grid backbone logic, and testing.
 - **Exposure Layer (`models/exposures.yml`)**: Defines downstream data consumers (e.g., specific dashboards or reports) to document end-to-end lineage within the dbt DAG. This completes the DAG lineage beyond dbt, enabling impact analysis (e.g. knowing which dashboards are affected if a mart table changes).
   - *Current Exposure*: `sales_funnel_monthly_dashboard` (declares the monthly sales funnel dashboard as a consumer of `rep_sales_funnel_monthly`).
   - *Future Exposures*: Can represent Metabase/Looker/Tableau dashboards, Census/Hightouch reverse ETL syncs, or ML feature stores.
@@ -164,12 +164,6 @@ dbt_enpal_assessment/
 - **Upstream Performance Filtering**:
   - In `mart__fct_crm_activities.sql`, we filter records early within the `activities` CTE before joining to `activity_types`.
   - In `mart__fct_crm_deal_changes.sql`, we compute the `LAG()` function over the full history in `deal_changes_raw` (retaining window calculation correctness), and then apply the incremental filter directly in the `deal_changes` CTE. This ensures downstream joins are only processed for the new incremental rows.
-
-### 12. Reporting Layer & Monthly Funnel Report
-- **Reporting Schema**: Configured a dedicated custom schema `reporting` using dbt custom schemas mapping to separate reporting models.
-- **Monthly Funnel Report (`rep_sales_funnel_monthly`)**: Directly aggregates stage transition events and key activities (Sales Call 1 and Sales Call 2) into monthly intervals, mapping them to the requested funnel steps (`1`, `2`, `2.1`, `3`, `3.1`, `4`, `5`, `6`, `7`, `8`, `9`), and computes the exact count of unique deals that entered each step.
-- **Dense Reporting Table (Backbone Approach)**: The model uses a `CROSS JOIN` backbone of all observed calendar months × all 11 funnel steps to guarantee a complete grid in the output. Steps with no deals in a given month emit `deals_count = 0` via `COALESCE`, making the table safe for dashboards relying on full month × funnel_step coverage (e.g. time-series charts).
-- **dbt Packages (`dbt_utils`)**: Added `dbt-labs/dbt_utils` (declared in [packages.yml](packages.yml), installed via `dbt deps`). Currently used for the `dbt_utils.expression_is_true` test enforcing `deals_count >= 0` on `rep_sales_funnel_monthly`. Additional tests (e.g. `unique_combination_of_columns`) and macros can be adopted incrementally as needed.
 
 # Governance & Guardrails
 
