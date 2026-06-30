@@ -17,5 +17,7 @@ models:
         description: The foreign key ID of the deal associated with this activity.
       - name: is_done
         description: Boolean indicating whether the activity is completed.
-      - name: due_at
-        description: The date and time when the activity is due.
+      - name: due_at_utc
+        description: The date and time when the activity is due in UTC timezone.
+      - name: due_at_berlin
+        description: The date and time when the activity is due converted to Europe/Berlin timezone.
