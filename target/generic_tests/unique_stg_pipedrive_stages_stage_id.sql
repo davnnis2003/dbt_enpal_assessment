@@ -1,0 +1,1 @@
+{{ test_unique(column_name="stage_id", model=get_where_subquery(ref('stg_pipedrive_stages'))) }}

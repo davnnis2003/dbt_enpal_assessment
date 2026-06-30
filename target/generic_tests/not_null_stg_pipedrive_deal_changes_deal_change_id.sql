@@ -1,0 +1,1 @@
+{{ test_not_null(column_name="deal_change_id", model=get_where_subquery(ref('stg_pipedrive_deal_changes'))) }}

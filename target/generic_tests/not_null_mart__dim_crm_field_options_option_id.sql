@@ -1,0 +1,1 @@
+{{ test_not_null(column_name="option_id", model=get_where_subquery(ref('mart__dim_crm_field_options'))) }}
