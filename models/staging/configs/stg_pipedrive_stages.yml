@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: stg_pipedrive_stages
+    description: Staged deal stages from the Pipedrive source.
+    columns:
+      - name: stage_id
+        description: The primary key of the stage.
+        tests:
+          - unique
+          - not_null
+      - name: stage_name
+        description: The name of the stage (e.g. Lead Generated, Negotiation).
