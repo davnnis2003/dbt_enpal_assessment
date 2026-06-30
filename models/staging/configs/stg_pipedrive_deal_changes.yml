@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: stg_pipedrive_deal_changes
+    description: Staged deal change records from the raw Pipedrive source.
+    columns:
+      - name: deal_change_id
+        description: The generated primary key/surrogate key of the deal change.
+        tests:
+          - unique
+          - not_null
+      - name: deal_id
+        description: The foreign key ID of the deal.
+      - name: changed_at_utc
+        description: The date and time when the change occurred in UTC timezone.
+      - name: changed_at_berlin
+        description: The date and time when the change occurred converted to Europe/Berlin timezone.
+      - name: changed_field_key
+        description: The key of the field that was changed (e.g. stage_id, user_id).
+      - name: new_value
+        description: The new value of the changed field.
