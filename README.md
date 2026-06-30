@@ -38,11 +38,13 @@ Our practices focus on modularity, clear grain definition, schema separation, to
 
 ## Folder Structures & Project Organization
 We have structured the project models according to the dbt Labs directory guidelines:
-- **Staging Layer (`models/staging/`)**: Contains models that have direct 1:1 relationships with our raw source tables. They perform light cleaning, renaming, casting, and timezone conversion. See the [Staging Architecture Guide](../models/staging/README.md) for details on naming conventions, directory layout, and configurations.
+- **Seed/Source Layer (`seeds/` & `models/sources.yml`)**: Controls the ingestion of raw data (CSV seed files) into source schemas.
+- **Staging Layer (`models/staging/`)**: Contains models that have direct 1:1 relationships with our raw source tables. They perform light cleaning, renaming, casting, and timezone conversion. See the [Staging Architecture Guide](models/staging/README.md) for details on naming conventions, directory layout, and configurations.
 - **Intermediate Layer (`models/intermediate/`)**: Contains models representing reusable business logic transformations. See the [Intermediate Architecture Guide](models/intermediate/README.md) for details on modular logic boundaries.
-- **Marts Layer (`models/marts/`)**: Contains the final presentation and dimension models (such as `rep_sales_funnel_monthly` or `dim_crm_users`). See the [Marts Architecture Guide](../models/marts/README.md) for details on our core design principles and mart classifications.
-  - Marts models use a **tool-agnostic naming convention** (e.g. `dim_crm_activity_types` instead of `dim_pipedrive_activity_types`). This abstracts downstream models from specific source tooling (Pipedrive) to represent business entities (like CRM) cleanly.
-  - Marts configuration files are stored in a centralized `configs` subdirectory (e.g., `models/marts/configs/mart__dim_crm_activity_types.yml`) to keep configuration files separated from models.
+- **Marts Layer (`models/marts/`)**: Contains the business-ready presentation models. See the [Marts Architecture Guide](models/marts/README.md) for details on our design principles and mart classifications:
+  - **Dimension Tables (`dim_`)**: Descriptive entities (e.g. `dim_crm_users`).
+  - **Fact Tables (`fct_`)**: Action/event-based metrics (e.g. `fct_crm_activities`).
+- **Reporting Layer (`models/reporting/`)**: Dedicated presentation layer positioned downstream of the Marts layer, aggregating metrics specifically for BI dashboards and final reporting (e.g. `rep_sales_funnel_monthly`).
 
 ---
 
