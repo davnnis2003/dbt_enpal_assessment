@@ -7,3 +7,4 @@ __pycache__/
 logs/
 dbt_packages/
 .user.yml
+dbt_internal_packages/
