@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: mart__fct_crm_deal_changes
+    description: Fact table capturing historical changes (transitions) to CRM deals.
+    columns:
+      - name: deal_change_id
+        description: Unique primary key for each deal change.
+        tests:
+          - unique
+          - not_null
+      - name: deal_id
+        description: Reference to the deal.
+        tests:
+          - not_null
+      - name: changed_at_utc
+        description: Timestamp when the change occurred (UTC).
+      - name: changed_at_berlin
+        description: Timestamp when the change occurred (Europe/Berlin).
+      - name: changed_field_key
+        description: The key of the field that was changed (e.g. stage_id, user_id, lost_reason, add_time).
+      - name: field_name
+        description: The human-readable name of the field that was changed.
+      - name: new_value
+        description: The raw value of the field after the change.
+      - name: new_value_resolved
+        description: The human-readable or resolved label of the new value if applicable (e.g. Stage name, Lost reason description).
+      - name: new_stage_id
+        description: Resolved stage ID if the changed field was stage_id.
+      - name: new_stage_name
+        description: Resolved stage name if the changed field was stage_id.
+      - name: new_user_id
+        description: Resolved assigned user ID if the changed field was user_id.
+      - name: new_lost_reason_id
+        description: Resolved lost reason option ID if the changed field was lost_reason.
+      - name: new_lost_reason_label
+        description: Resolved lost reason label if the changed field was lost_reason.
