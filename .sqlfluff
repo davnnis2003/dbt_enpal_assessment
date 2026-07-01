@@ -1,0 +1,38 @@
+[sqlfluff]
+# Set the dialect to Postgres (matching our database engine)
+dialect = postgres
+# Use the dbt templater to compile models before linting
+templater = dbt
+# Define the maximum line length
+max_line_length = 120
+# Prevent runaway parsing
+runaway_limit = 10
+
+[sqlfluff:templater:dbt]
+# Path to the dbt project and profiles directories
+project_dir = .
+profiles_dir = .
+
+[sqlfluff:rules:capitalisation.keywords]
+# Enforce uppercase SQL keywords (e.g., SELECT, FROM, WHERE)
+capitalisation_policy = upper
+
+[sqlfluff:rules:capitalisation.functions]
+# Enforce uppercase SQL function names (e.g., COALESCE, DATE_TRUNC)
+extended_capitalisation_policy = upper
+
+[sqlfluff:rules:capitalisation.literals]
+# Enforce uppercase literals (e.g., NULL, TRUE, FALSE)
+capitalisation_policy = upper
+
+[sqlfluff:rules:aliasing.table]
+# Enforce explicit 'AS' for table/CTE aliasing
+aliasing = explicit
+
+[sqlfluff:rules:aliasing.column]
+# Enforce explicit 'AS' for column aliasing
+aliasing = explicit
+
+[sqlfluff:rules:aliasing.expression]
+# Enforce aliasing for expressions
+allow_duplication = False
