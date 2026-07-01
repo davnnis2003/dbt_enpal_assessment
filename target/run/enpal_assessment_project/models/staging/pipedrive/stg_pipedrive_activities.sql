@@ -24,6 +24,17 @@ WITH
         FROM
             source
     ),
+    -- NOTE: Exploratory analysis revealed that records with duplicate activity_id exist in raw data,
+    -- but they carry different type, assigned_to_user, and deal_id values. The root cause is unclear
+    -- (likely a sync/state bug in Pipedrive). 
+    -- 
+    -- Alternatively, if these rows represent unique business interactions, they could be preserved 
+    -- by constructing a compound surrogate key (e.g. hash of activity_id + deal_id). However, this 
+    -- would introduce extra complexity downstream (additional join conditions, downstream duplication risk).
+    -- 
+    -- Given the very low magnitude of the issue (only ~10 duplicate records out of ~4,500 total rows),
+    -- we enforce grain deduplication here to ensure unique activity_id by selecting the latest record
+    -- based on due date.
     deduplicated AS (
         SELECT
             *,

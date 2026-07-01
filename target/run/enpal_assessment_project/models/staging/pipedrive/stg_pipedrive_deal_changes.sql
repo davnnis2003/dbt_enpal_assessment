@@ -14,11 +14,7 @@ WITH
     ),
     renamed AS (
         SELECT
-            md5(concat(
-                coalesce(cast(deal_id AS varchar), ''), '-',
-                coalesce(cast(change_time AS varchar), ''), '-',
-                coalesce(cast(changed_field_key AS varchar), '')
-            )) AS deal_change_id,
+            md5(cast(coalesce(cast(deal_id as TEXT), '_dbt_utils_surrogate_key_null_') || '-' || coalesce(cast(change_time as TEXT), '_dbt_utils_surrogate_key_null_') || '-' || coalesce(cast(changed_field_key as TEXT), '_dbt_utils_surrogate_key_null_') as TEXT)) AS deal_change_id,
             cast(deal_id AS integer) AS deal_id,
             cast(change_time AS timestamp) AS changed_at_utc,
             cast(change_time AS timestamp) AT TIME ZONE 'UTC' AT TIME ZONE 'Europe/Berlin' AS changed_at_berlin,

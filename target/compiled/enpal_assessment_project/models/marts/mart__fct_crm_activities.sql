@@ -4,13 +4,7 @@ WITH
         SELECT
             *
         FROM
-            "postgres"."staging"."stg_pipedrive_activities" AS stg_pipedrive_activities
-        
-        WHERE
-            
-    stg_pipedrive_activities.due_at_utc >= (SELECT MAX(due_at_utc) FROM "postgres"."marts"."fct_crm_activities")
-
-        
+            "postgres"."staging"."stg_pipedrive_activities" AS stg_pipedrive_activities 
     ),
     activity_types AS (
         SELECT
@@ -30,8 +24,10 @@ SELECT
     activities.due_at_berlin AS due_at_berlin
 FROM
     activities AS activities
-LEFT JOIN
-    activity_types AS activity_types
-    ON activities.activity_type_category = activity_types.activity_type_category
-
--- TODO: Explore JOIN with Deals Changes fact table later
+    LEFT JOIN activity_types AS activity_types ON activities.activity_type_category = activity_types.activity_type_category
+    -- NOTE: To preserve clean data lineage and modular boundaries, we do not join with
+    -- the deal changes fact table at the Marts layer at this point. Combining activities and deal
+    -- changes event streams is deferred downstream to the Reporting layer (e.g., inside
+    -- rep_sales_funnel_monthly.sql). If solid business use cases arise in the future,
+    -- this JOIN can be moved up to the Marts layer. In case circular dependencies
+    -- emerge, the Intermediate layer (`models/intermediate/`) can be leveraged.
