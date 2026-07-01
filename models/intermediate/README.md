@@ -1,28 +1,16 @@
 # Intermediate Layer Guidelines
 
-This guide outlines our standards and design principles for the **Intermediate Layer** (`models/intermediate/`), following the official **[dbt Labs Best Practice Guide on Intermediate Models](https://docs.getdbt.com/guides/best-practices/how-we-structure/4-intermediate)**.
+This directory (`models/intermediate/`) is designated for intermediate models, which serve as modular stepping stones between the Staging and Marts layers. 
 
-The intermediate layer serves as a stepping stone between the Staging and Marts layers. It is used to modularize complex business logic, perform joins, and pre-aggregate data before assembling data marts.
+### Current Project Status
+For this CRM analytics funnel project, all event construction, state tracking, and resolving calculations are modeled directly inside the core Dimension and Fact models in the `marts` layer (e.g., leveraging window functions and joins in `mart__fct_crm_deal_changes` and `mart__fct_crm_activities`). 
+
+Consequently, no intermediate models (`int_`) are materialized in this layer. The directory is kept as part of the overall structure to ensure consistency with our standard dbt project organization and support future expansion (e.g. multi-step lead transitions, pipeline event tracking).
 
 ---
 
-## 1. Core Principles
-
+## Standard Design Principles
+If added in the future, intermediate models should follow these guidelines:
 - **Modular Transformations**: Used to isolate reusable transformations (e.g. complex joins, pivoting, filtering, or aggregations) that would otherwise be duplicated across multiple marts.
 - **Internal Layer Only**: Intermediate models are built for other dbt models to reference. They are **not** meant to be queried directly by BI tools or end-users.
-- **Materialization**: By default, intermediate models are materialized as **views** or **ephemeral** models to keep the database tidy, unless performance requirements mandate building them as tables.
-
----
-
-## 2. Structure & Conventions
-
-### Directory Layout
-- **Models**: Placed directly under `models/intermediate/` (e.g. `int_crm_users_joined.sql`).
-- **Configurations**: Centralized in config files within the directory (e.g. `models/intermediate/int_crm_users_joined.yml`).
-
-### Naming Convention
-Intermediate models follow the pattern:
-```
-int_<entity>_<verb_or_logic>.sql
-```
-*Example:* `int_crm_users_joined.sql`
+- **Materialization**: By default, intermediate models should be materialized as **views** or **ephemeral** models to keep the database tidy.
