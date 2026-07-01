@@ -1,2 +1,7 @@
-# Global ownership for the repository
-*       @davnnis2003
+# Core Configuration Files
+/profiles.yml           @davnnis2003
+/.sqlfluff              @davnnis2003
+/dbt_project.yml        @davnnis2003
+
+# Repository Configuration & Workflows
+/.github/               @davnnis2003
