@@ -69,12 +69,14 @@ When profiling `activity.csv`, duplicate records sharing the same `activity_id` 
   GROUP BY 1
   ORDER BY 2 DESC
   ```
-- **Observation & Cause**: Closer inspection reveals that these duplicates share the same `activity_id` but differ across key fields like `type`, `assigned_to_user`, and `deal_id`. This pattern suggests a synchronization or state-logging bug originating directly within the upstream Pipedrive CRM application environment.
-- **Handling**: To preserve grain integrity (where one row in staging represents one unique activity), the staging model uses a window function:
-  ```sql
-  row_number() OVER (PARTITION BY activity_id ORDER BY due_to DESC) AS row_num
-  ```
-  We filter for `row_num = 1` to deduplicate, retaining the latest record based on the scheduled due date.
+- **Observation & Cause**: Closer inspection reveals that these duplicates share the same `activity_id` but differ across key fields like `type`, `assigned_to_user`, and `deal_id`. While this suggests a synchronization or state-logging bug within the upstream CRM, the exact cause and correct business logic remain unverified.
+- **Modeling Trade-off & Handling**: 
+  - *Option A (Surrogate Key)*: If these records represent unique, valid interactions, they could be preserved using a compound surrogate key (e.g., hashing `activity_id` and `deal_id` together). However, this would introduce significant complexity downstream (multi-column joins, risk of compounding duplication).
+  - *Option B (Forced Deduplication - Implemented)*: Given the very low magnitude of the issue (only ~10 duplicate records out of ~4,500 total rows), we protect the downstream data grain and maintain model simplicity by deduplicating. We select the latest record based on due date:
+    ```sql
+    row_number() OVER (PARTITION BY activity_id ORDER BY due_to DESC) AS row_num
+    ```
+    We filter for `row_num = 1` in the staging view.
 
 ### Null Deals in Activities
 A small subset of activities in `activity.csv` have a null `deal_id` (representing general user tasks not linked to specific sales pipelines). 
