@@ -1,14 +1,12 @@
-{
-    {
-        config (
-            materialized = 'incremental',
-            schema = 'marts',
-            alias = 'fct_crm_activities',
-            unique_key = 'activity_id',
-            on_schema_change = 'sync_all_columns'
-        )
-    }
-}
+{{
+    config (
+        materialized = 'incremental',
+        schema = 'marts',
+        alias = 'fct_crm_activities',
+        unique_key = 'activity_id',
+        on_schema_change = 'sync_all_columns'
+    )
+}}
 WITH
     activities AS (
         SELECT

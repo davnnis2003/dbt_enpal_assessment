@@ -1,7 +1,9 @@
 
     
     
-    truncate table "postgres"."s_pipedrive"."activity_types";
+    
+    create table "postgres"."s_pipedrive"."activity_types" ("id" integer,"name" text,"active" text,"type" text)
+  ;
     -- dbt seed --
     
           insert into "postgres"."s_pipedrive"."activity_types" ("id", "name", "active", "type") values

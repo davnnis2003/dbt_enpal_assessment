@@ -23,6 +23,9 @@ WITH
         SELECT
             CAST(DATE_TRUNC('month', mart__fct_crm_activities.due_at_berlin) AS DATE) AS month,
             mart__fct_crm_activities.deal_id AS deal_id,
+            -- NOTE: Mapping specific activity types to funnel sub-steps as identified during EDA:
+            -- activity_type_id = 1 maps to category 'meeting' ("Sales Call 1") -> Funnel Step '2.1'
+            -- activity_type_id = 2 maps to category 'sc_2' ("Sales Call 2") -> Funnel Step '3.1'
             CASE
                 WHEN mart__fct_crm_activities.activity_type_id = 1 THEN '2.1'
                 WHEN mart__fct_crm_activities.activity_type_id = 2 THEN '3.1'
@@ -52,6 +55,10 @@ WITH
             activity_entries AS activity_entries
     ),
     -- Generate one row per calendar month across the full observed date range
+    -- NOTE: GENERATE_SERIES is Postgres-specific. In cloud data warehouses, use target equivalents:
+    -- e.g. BigQuery: UNNEST(GENERATE_DATE_ARRAY(...))
+    -- e.g. Snowflake: generator tables or recursive CTEs
+    -- Alternatively, the cross-database `dbt_utils.date_spine` macro can be used to generate this sequence database-agnostically.
     all_months AS (
         SELECT
             CAST(DATE_TRUNC('month', generate_series.month_start) AS DATE) AS month

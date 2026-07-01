@@ -1,14 +1,12 @@
-{
-    {
-        config (
-            materialized = 'incremental',
-            schema = 'marts',
-            alias = 'fct_crm_deal_changes',
-            unique_key = 'deal_change_id',
-            on_schema_change = 'sync_all_columns'
-        )
-    }
-}
+{{
+    config (
+        materialized = 'incremental',
+        schema = 'marts',
+        alias = 'fct_crm_deal_changes',
+        unique_key = 'deal_change_id',
+        on_schema_change = 'sync_all_columns'
+    )
+}}
 WITH
     deal_changes_raw AS (
         SELECT
