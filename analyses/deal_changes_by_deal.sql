@@ -14,6 +14,7 @@ SELECT
 FROM {{ ref('mart__fct_crm_deal_changes') }} AS fct_crm_deal_changes
 WHERE
     1 = 1
+    -- Deal 155164 was selected as an arbitrary example record with a full funnel traversal for EDA purposes
     AND fct_crm_deal_changes.deal_id = 155164
 ORDER BY
     fct_crm_deal_changes.changed_at_utc ASC
