@@ -343,11 +343,11 @@ We use custom macros to control database schemas and query building behaviors:
 To guarantee long-term pipeline stability, the following tooling is in place or proposed for the CI/CD workflow:
 
 ### Implemented
-- **SQL Linting (`.sqlfluff`)**: A [SQLFluff](https://sqlfluff.com/) configuration ([`.sqlfluff`](.sqlfluff)) is checked into the repository. It enforces the `postgres` dialect, requires uppercase SQL keywords and function names, and mandates explicit `AS` aliasing for all columns and tables — matching the project's SQL conventions exactly. The `dbt` templater is configured so linting resolves Jinja macros before analysis.
 - **Pull Request Template (`.github/pull_request_template.md`)**: A standardized PR checklist template ([pull_request_template.md](.github/pull_request_template.md)) is enforced on every GitHub PR, requiring contributors to confirm local build success, downstream compatibility, and passing data tests before merge.
 - **CODEOWNERS Policy (`.github/CODEOWNERS`)**: A [CODEOWNERS](.github/CODEOWNERS) file assigns ownership over core configuration files (`profiles.yml`, `dbt_project.yml`, `.sqlfluff`) and the `.github/` directory to the central data platform maintainer, requiring their explicit review approval on any changes to these files.
 
 ### Proposed
+- **SQL Linting (`.sqlfluff`)**: A [SQLFluff](https://sqlfluff.com/) configuration ([`.sqlfluff`](.sqlfluff)) is checked into the repository. It enforces the `postgres` dialect, requires uppercase SQL keywords and function names, and mandates explicit `AS` aliasing for all columns and tables — matching the project's SQL conventions exactly. The `dbt` templater is configured so linting resolves Jinja macros before analysis.
 - **Pre-commit Hooks**: Set up local [pre-commit](https://pre-commit.com/) hooks to run `sqlfluff lint` and formatting checks locally before code is committed, shifting quality checks left.
 - **`dbt compile` Checks**: The CI pipeline should run `dbt compile` on every PR to verify syntax correctness, project configuration compliance, and macro resolutions.
 - **Dry-Run in Ephemeral Database**: Run modified dbt models against an ephemeral/temporary schema to perform a full dry-run execution and verify query execution.
