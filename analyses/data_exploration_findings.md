@@ -59,13 +59,22 @@ The reporting specification includes sub-steps **2.1 (Sales Call 1)** and **3.1 
 Several critical data quality anomalies were discovered and addressed during the exploratory stage:
 
 ### Duplicate Activities in Raw Ingestion
-When profiling `activity.csv`, duplicate records sharing the same `activity_id` were detected. 
-- **Cause**: Upstream systems or ingestion errors occasionally double-loaded activity rows.
+When profiling `activity.csv`, duplicate records sharing the same `activity_id` were detected.
+- **Verification Query**:
+  ```sql
+  -- View table data
+  SELECT activity.activity_id
+      ,  COUNT(*)
+  FROM s_pipedrive.activity
+  GROUP BY 1
+  ORDER BY 2 DESC
+  ```
+- **Observation & Cause**: Closer inspection reveals that these duplicates share the same `activity_id` but differ across key fields like `type`, `assigned_to_user`, and `deal_id`. This pattern suggests a synchronization or state-logging bug originating directly within the upstream Pipedrive CRM application environment.
 - **Handling**: To preserve grain integrity (where one row in staging represents one unique activity), the staging model uses a window function:
   ```sql
   row_number() OVER (PARTITION BY activity_id ORDER BY due_to DESC) AS row_num
   ```
-  We filter for `row_num = 1` to deduplicate, retaining the most recently scheduled due date.
+  We filter for `row_num = 1` to deduplicate, retaining the latest record based on the scheduled due date.
 
 ### Null Deals in Activities
 A small subset of activities in `activity.csv` have a null `deal_id` (representing general user tasks not linked to specific sales pipelines). 
