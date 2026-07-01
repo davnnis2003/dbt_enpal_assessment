@@ -13,17 +13,18 @@ Evaluate abilities in the following core areas:
 
 ### Local Database Setup
 1. Download & launch **Docker Desktop**.
-2. Run `docker compose up` to start a local Postgres database with the raw data loaded.
-3. Database credentials:
+2. **Fork** the GitHub project to your GitHub account. Clone the forked repo to your device.
+3. Open Terminal, navigate to the folder, and run `docker compose up` to start a local Postgres database with the raw data loaded.
+4. Database credentials:
    - **Host**: `localhost`
    - **User**: `admin`
    - **Password**: `admin`
    - **Port**: `5432`
-   - **Database**: (Typically configured in `docker-compose.yml` / `profiles.yml`)
+5. Connect to the DB via a preferred tool (e.g. DataGrip, DBeaver).
 
 ### DBT Configuration
-- Use `dbt-core` and `dbt-postgres`.
-- Test model outputs will write to the `public_pipedrive_analytics` schema.
+- Install `dbt-core` and `dbt-postgres` (e.g. via `pip install dbt-core dbt-postgres`).
+- Run `dbt run` with the test model and check the `public_pipedrive_analytics` schema to verify the setup.
 
 ---
 
