@@ -7,6 +7,7 @@ services:
       POSTGRES_DB: postgres
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
+    # commending these out as they are replced by dbt Seeds for static data ingestion
     # volumes:
       # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       # - ./raw_data:/raw_data  # Mount raw_data folder to access CSV files
