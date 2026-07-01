@@ -28,134 +28,131 @@ Then run the pipeline:
 ```bash
 dbt deps && dbt build
 ```
-Example logs:
+Example logs (full refresh):
 
 ```bash
-jimmypang@bee40d28-db24-43be-8eeb-d133ad959530 dbt_enpal_assessment % uv run dbt build
-15:15:09  Running with dbt=1.11.11
-15:15:09  Registered adapter: postgres=1.10.2
-15:15:10  [WARNING]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.
-There are 1 unused configuration paths:
-- models.enpal_assessment_project.intermediate
-15:15:10  Found 14 models, 6 seeds, 34 data tests, 6 sources, 1 exposure, 593 macros
-15:15:10  
-15:15:10  Concurrency: 1 threads (target='dev')
-15:15:10  
-15:15:11  1 of 55 START seed file s_pipedrive.activity ................................... [RUN]
-15:15:11  1 of 55 OK loaded seed file s_pipedrive.activity ............................... [INSERT 4579 in 0.91s]
-15:15:11  2 of 55 START seed file s_pipedrive.activity_types ............................. [RUN]
-15:15:11  2 of 55 OK loaded seed file s_pipedrive.activity_types ......................... [INSERT 4 in 0.03s]
-15:15:11  3 of 55 START seed file s_pipedrive.deal_changes ............................... [RUN]
-15:15:13  3 of 55 OK loaded seed file s_pipedrive.deal_changes ........................... [INSERT 15406 in 1.74s]
-15:15:13  4 of 55 START seed file s_pipedrive.fields ..................................... [RUN]
-15:15:13  4 of 55 OK loaded seed file s_pipedrive.fields ................................. [INSERT 4 in 0.03s]
-15:15:13  5 of 55 START seed file s_pipedrive.stages ..................................... [RUN]
-15:15:13  5 of 55 OK loaded seed file s_pipedrive.stages ................................. [INSERT 9 in 0.03s]
-15:15:13  6 of 55 START seed file s_pipedrive.users ...................................... [RUN]
-15:15:14  6 of 55 OK loaded seed file s_pipedrive.users .................................. [INSERT 1787 in 0.28s]
-15:15:14  7 of 55 START sql view model staging.stg_pipedrive_activities .................. [RUN]
-15:15:14  7 of 55 OK created sql view model staging.stg_pipedrive_activities ............. [CREATE VIEW in 0.08s]
-15:15:14  8 of 55 START sql view model staging.stg_pipedrive_activity_types .............. [RUN]
-15:15:14  8 of 55 OK created sql view model staging.stg_pipedrive_activity_types ......... [CREATE VIEW in 0.04s]
-15:15:14  9 of 55 START sql view model staging.stg_pipedrive_deal_changes ................ [RUN]
-15:15:14  9 of 55 OK created sql view model staging.stg_pipedrive_deal_changes ........... [CREATE VIEW in 0.04s]
-15:15:14  10 of 55 START sql view model staging.stg_pipedrive_fields ..................... [RUN]
-15:15:14  10 of 55 OK created sql view model staging.stg_pipedrive_fields ................ [CREATE VIEW in 0.03s]
-15:15:14  11 of 55 START sql view model staging.stg_pipedrive_stages ..................... [RUN]
-15:15:14  11 of 55 OK created sql view model staging.stg_pipedrive_stages ................ [CREATE VIEW in 0.04s]
-15:15:14  12 of 55 START sql view model staging.stg_pipedrive_users ...................... [RUN]
-15:15:14  12 of 55 OK created sql view model staging.stg_pipedrive_users ................. [CREATE VIEW in 0.03s]
-15:15:14  13 of 55 START test not_null_stg_pipedrive_activities_activity_id .............. [RUN]
-15:15:14  13 of 55 PASS not_null_stg_pipedrive_activities_activity_id .................... [PASS in 0.04s]
-15:15:14  14 of 55 START test unique_stg_pipedrive_activities_activity_id ................ [RUN]
-15:15:14  14 of 55 PASS unique_stg_pipedrive_activities_activity_id ...................... [PASS in 0.03s]
-15:15:14  15 of 55 START test not_null_stg_pipedrive_activity_types_activity_type_id ..... [RUN]
-15:15:14  15 of 55 PASS not_null_stg_pipedrive_activity_types_activity_type_id ........... [PASS in 0.02s]
-15:15:14  16 of 55 START test unique_stg_pipedrive_activity_types_activity_type_id ....... [RUN]
-15:15:14  16 of 55 PASS unique_stg_pipedrive_activity_types_activity_type_id ............. [PASS in 0.03s]
-15:15:14  17 of 55 START test not_null_stg_pipedrive_deal_changes_deal_change_id ......... [RUN]
-15:15:14  17 of 55 PASS not_null_stg_pipedrive_deal_changes_deal_change_id ............... [PASS in 0.04s]
-15:15:14  18 of 55 START test unique_stg_pipedrive_deal_changes_deal_change_id ........... [RUN]
-15:15:14  18 of 55 PASS unique_stg_pipedrive_deal_changes_deal_change_id ................. [PASS in 0.06s]
-15:15:14  19 of 55 START test not_null_stg_pipedrive_fields_field_id ..................... [RUN]
-15:15:14  19 of 55 PASS not_null_stg_pipedrive_fields_field_id ........................... [PASS in 0.02s]
-15:15:14  20 of 55 START test unique_stg_pipedrive_fields_field_id ....................... [RUN]
-15:15:14  20 of 55 PASS unique_stg_pipedrive_fields_field_id ............................. [PASS in 0.02s]
-15:15:14  21 of 55 START test not_null_stg_pipedrive_stages_stage_id ..................... [RUN]
-15:15:14  21 of 55 PASS not_null_stg_pipedrive_stages_stage_id ........................... [PASS in 0.02s]
-15:15:14  22 of 55 START test unique_stg_pipedrive_stages_stage_id ....................... [RUN]
-15:15:14  22 of 55 PASS unique_stg_pipedrive_stages_stage_id ............................. [PASS in 0.02s]
-15:15:14  23 of 55 START test not_null_stg_pipedrive_users_user_id ....................... [RUN]
-15:15:14  23 of 55 PASS not_null_stg_pipedrive_users_user_id ............................. [PASS in 0.02s]
-15:15:14  24 of 55 START test unique_stg_pipedrive_users_user_id ......................... [RUN]
-15:15:14  24 of 55 PASS unique_stg_pipedrive_users_user_id ............................... [PASS in 0.02s]
-15:15:14  25 of 55 START sql table model marts.dim_crm_activity_types .................... [RUN]
-15:15:14  25 of 55 OK created sql table model marts.dim_crm_activity_types ............... [SELECT 4 in 0.05s]
-15:15:14  26 of 55 START sql table model marts.dim_crm_field_options ..................... [RUN]
-15:15:14  26 of 55 OK created sql table model marts.dim_crm_field_options ................ [SELECT 14 in 0.04s]
-15:15:14  27 of 55 START sql table model marts.dim_crm_fields ............................ [RUN]
-15:15:14  27 of 55 OK created sql table model marts.dim_crm_fields ....................... [SELECT 4 in 0.04s]
-15:15:14  28 of 55 START sql table model marts.dim_crm_stages ............................ [RUN]
-15:15:14  28 of 55 OK created sql table model marts.dim_crm_stages ....................... [SELECT 9 in 0.04s]
-15:15:14  29 of 55 START sql table model marts.dim_crm_users ............................. [RUN]
-15:15:14  29 of 55 OK created sql table model marts.dim_crm_users ........................ [SELECT 1787 in 0.06s]
-15:15:14  30 of 55 START test not_null_mart__dim_crm_activity_types_activity_type_id ..... [RUN]
-15:15:14  30 of 55 PASS not_null_mart__dim_crm_activity_types_activity_type_id ........... [PASS in 0.02s]
-15:15:14  31 of 55 START test unique_mart__dim_crm_activity_types_activity_type_id ....... [RUN]
-15:15:14  31 of 55 PASS unique_mart__dim_crm_activity_types_activity_type_id ............. [PASS in 0.02s]
-15:15:14  32 of 55 START test not_null_mart__dim_crm_field_options_field_id .............. [RUN]
-15:15:14  32 of 55 PASS not_null_mart__dim_crm_field_options_field_id .................... [PASS in 0.02s]
-15:15:14  33 of 55 START test not_null_mart__dim_crm_field_options_option_id ............. [RUN]
-15:15:15  33 of 55 PASS not_null_mart__dim_crm_field_options_option_id ................... [PASS in 0.02s]
-15:15:15  34 of 55 START test not_null_mart__dim_crm_fields_field_id ..................... [RUN]
-15:15:15  34 of 55 PASS not_null_mart__dim_crm_fields_field_id ........................... [PASS in 0.02s]
-15:15:15  35 of 55 START test unique_mart__dim_crm_fields_field_id ....................... [RUN]
-15:15:15  35 of 55 PASS unique_mart__dim_crm_fields_field_id ............................. [PASS in 0.02s]
-15:15:15  36 of 55 START test not_null_mart__dim_crm_stages_stage_id ..................... [RUN]
-15:15:15  36 of 55 PASS not_null_mart__dim_crm_stages_stage_id ........................... [PASS in 0.02s]
-15:15:15  37 of 55 START test unique_mart__dim_crm_stages_stage_id ....................... [RUN]
-15:15:15  37 of 55 PASS unique_mart__dim_crm_stages_stage_id ............................. [PASS in 0.02s]
-15:15:15  38 of 55 START test not_null_mart__dim_crm_users_user_id ....................... [RUN]
-15:15:15  38 of 55 PASS not_null_mart__dim_crm_users_user_id ............................. [PASS in 0.02s]
-15:15:15  39 of 55 START test unique_mart__dim_crm_users_user_id ......................... [RUN]
-15:15:15  39 of 55 PASS unique_mart__dim_crm_users_user_id ............................... [PASS in 0.02s]
-15:15:15  40 of 55 START sql incremental model marts.fct_crm_activities .................. [RUN]
-15:15:15  40 of 55 OK created sql incremental model marts.fct_crm_activities ............. [INSERT 0 1 in 0.12s]
-15:15:15  41 of 55 START sql incremental model marts.fct_crm_deal_changes ................ [RUN]
-15:15:15  41 of 55 OK created sql incremental model marts.fct_crm_deal_changes ........... [INSERT 0 1 in 0.16s]
-15:15:15  42 of 55 START test not_null_mart__fct_crm_activities_activity_id .............. [RUN]
-15:15:15  42 of 55 PASS not_null_mart__fct_crm_activities_activity_id .................... [PASS in 0.02s]
-15:15:15  43 of 55 START test unique_mart__fct_crm_activities_activity_id ................ [RUN]
-15:15:15  43 of 55 PASS unique_mart__fct_crm_activities_activity_id ...................... [PASS in 0.02s]
-15:15:15  44 of 55 START test not_null_mart__fct_crm_deal_changes_deal_change_id ......... [RUN]
-15:15:15  44 of 55 PASS not_null_mart__fct_crm_deal_changes_deal_change_id ............... [PASS in 0.02s]
-15:15:15  45 of 55 START test not_null_mart__fct_crm_deal_changes_deal_id ................ [RUN]
-15:15:15  45 of 55 PASS not_null_mart__fct_crm_deal_changes_deal_id ...................... [PASS in 0.02s]
-15:15:15  46 of 55 START test unique_mart__fct_crm_deal_changes_deal_change_id ........... [RUN]
-15:15:15  46 of 55 PASS unique_mart__fct_crm_deal_changes_deal_change_id ................. [PASS in 0.04s]
-15:15:15  47 of 55 START sql table model reporting.rep_sales_funnel_monthly .............. [RUN]
-15:15:15  47 of 55 OK created sql table model reporting.rep_sales_funnel_monthly ......... [SELECT 154 in 0.07s]
-15:15:15  48 of 55 NO-OP exposure sales_funnel_monthly_dashboard ......................... [NO-OP in 0.00s]
-15:15:15  49 of 55 START test accepted_values_rep_sales_funnel_monthly_funnel_step__1__2__2_1__3__3_1__4__5__6__7__8__9  [RUN]
-15:15:15  49 of 55 PASS accepted_values_rep_sales_funnel_monthly_funnel_step__1__2__2_1__3__3_1__4__5__6__7__8__9  [PASS in 0.03s]
-15:15:15  50 of 55 START test dbt_utils_expression_is_true_rep_sales_funnel_monthly_deals_count___0  [RUN]
-15:15:15  50 of 55 PASS dbt_utils_expression_is_true_rep_sales_funnel_monthly_deals_count___0  [PASS in 0.02s]
-15:15:15  51 of 55 START test dbt_utils_unique_combination_of_columns_rep_sales_funnel_monthly_month__funnel_step  [RUN]
-15:15:15  51 of 55 PASS dbt_utils_unique_combination_of_columns_rep_sales_funnel_monthly_month__funnel_step  [PASS in 0.02s]
-15:15:15  52 of 55 START test not_null_rep_sales_funnel_monthly_deals_count .............. [RUN]
-15:15:15  52 of 55 PASS not_null_rep_sales_funnel_monthly_deals_count .................... [PASS in 0.02s]
-15:15:15  53 of 55 START test not_null_rep_sales_funnel_monthly_funnel_step .............. [RUN]
-15:15:15  53 of 55 PASS not_null_rep_sales_funnel_monthly_funnel_step .................... [PASS in 0.02s]
-15:15:15  54 of 55 START test not_null_rep_sales_funnel_monthly_kpi_name ................. [RUN]
-15:15:15  54 of 55 PASS not_null_rep_sales_funnel_monthly_kpi_name ....................... [PASS in 0.02s]
-15:15:15  55 of 55 START test not_null_rep_sales_funnel_monthly_month .................... [RUN]
-15:15:15  55 of 55 PASS not_null_rep_sales_funnel_monthly_month .......................... [PASS in 0.02s]
-15:15:15  
-15:15:15  Finished running 1 exposure, 2 incremental models, 6 seeds, 6 table models, 34 data tests, 6 view models in 0 hours 0 minutes and 5.62 seconds (5.62s).
-15:15:15  
-15:15:15  Completed successfully
-15:15:15  
-15:15:15  Done. PASS=54 WARN=0 ERROR=0 SKIP=0 NO-OP=1 TOTAL=55`
+jimmypang@bee40d28-db24-43be-8eeb-d133ad959530 dbt_enpal_assessment % uv run dbt build --full-refresh
+08:20:05  Running with dbt=1.11.11
+08:20:05  Registered adapter: postgres=1.10.2
+08:20:05  Found 14 models, 6 seeds, 34 data tests, 6 sources, 1 exposure, 593 macros
+08:20:05  
+08:20:05  Concurrency: 1 threads (target='dev')
+08:20:05  
+08:20:05  1 of 55 START seed file s_pipedrive.activity ................................... [RUN]
+08:20:05  1 of 55 OK loaded seed file s_pipedrive.activity ............................... [INSERT 4579 in 0.91s]
+08:20:05  2 of 55 START seed file s_pipedrive.activity_types ............................. [RUN]
+08:20:05  2 of 55 OK loaded seed file s_pipedrive.activity_types ......................... [INSERT 4 in 0.03s]
+08:20:05  3 of 55 START seed file s_pipedrive.deal_changes ............................... [RUN]
+08:20:05  3 of 55 OK loaded seed file s_pipedrive.deal_changes ........................... [INSERT 15406 in 1.74s]
+08:20:05  4 of 55 START seed file s_pipedrive.fields ..................................... [RUN]
+08:20:05  4 of 55 OK loaded seed file s_pipedrive.fields ................................. [INSERT 4 in 0.03s]
+08:20:05  5 of 55 START seed file s_pipedrive.stages ..................................... [RUN]
+08:20:05  5 of 55 OK loaded seed file s_pipedrive.stages ................................. [INSERT 9 in 0.03s]
+08:20:05  6 of 55 START seed file s_pipedrive.users ...................................... [RUN]
+08:20:05  6 of 55 OK loaded seed file s_pipedrive.users .................................. [INSERT 1787 in 0.28s]
+08:20:05  7 of 55 START sql view model staging.stg_pipedrive_activities .................. [RUN]
+08:20:05  7 of 55 OK created sql view model staging.stg_pipedrive_activities ............. [CREATE VIEW in 0.08s]
+08:20:05  8 of 55 START sql view model staging.stg_pipedrive_activity_types .............. [RUN]
+08:20:05  8 of 55 OK created sql view model staging.stg_pipedrive_activity_types ......... [CREATE VIEW in 0.04s]
+08:20:05  9 of 55 START sql view model staging.stg_pipedrive_deal_changes ................ [RUN]
+08:20:05  9 of 55 OK created sql view model staging.stg_pipedrive_deal_changes ........... [CREATE VIEW in 0.04s]
+08:20:05  10 of 55 START sql view model staging.stg_pipedrive_fields ..................... [RUN]
+08:20:05  10 of 55 OK created sql view model staging.stg_pipedrive_fields ................ [CREATE VIEW in 0.03s]
+08:20:05  11 of 55 START sql view model staging.stg_pipedrive_stages ..................... [RUN]
+08:20:05  11 of 55 OK created sql view model staging.stg_pipedrive_stages ................ [CREATE VIEW in 0.04s]
+08:20:05  12 of 55 START sql view model staging.stg_pipedrive_users ...................... [RUN]
+08:20:05  12 of 55 OK created sql view model staging.stg_pipedrive_users ................. [CREATE VIEW in 0.03s]
+08:20:05  13 of 55 START test not_null_stg_pipedrive_activities_activity_id .............. [RUN]
+08:20:05  13 of 55 PASS not_null_stg_pipedrive_activities_activity_id .................... [PASS in 0.04s]
+08:20:05  14 of 55 START test unique_stg_pipedrive_activities_activity_id ................ [RUN]
+08:20:05  14 of 55 PASS unique_stg_pipedrive_activities_activity_id ...................... [PASS in 0.03s]
+08:20:05  15 of 55 START test not_null_stg_pipedrive_activity_types_activity_type_id ..... [RUN]
+08:20:05  15 of 55 PASS not_null_stg_pipedrive_activity_types_activity_type_id ........... [PASS in 0.02s]
+08:20:05  16 of 55 START test unique_stg_pipedrive_activity_types_activity_type_id ....... [RUN]
+08:20:05  16 of 55 PASS unique_stg_pipedrive_activity_types_activity_type_id ............. [PASS in 0.03s]
+08:20:05  17 of 55 START test not_null_stg_pipedrive_deal_changes_deal_change_id ......... [RUN]
+08:20:05  17 of 55 PASS not_null_stg_pipedrive_deal_changes_deal_change_id ............... [PASS in 0.04s]
+08:20:05  18 of 55 START test unique_stg_pipedrive_deal_changes_deal_change_id ........... [RUN]
+08:20:05  18 of 55 PASS unique_stg_pipedrive_deal_changes_deal_change_id ................. [PASS in 0.06s]
+08:20:05  19 of 55 START test not_null_stg_pipedrive_fields_field_id ..................... [RUN]
+08:20:05  19 of 55 PASS not_null_stg_pipedrive_fields_field_id ........................... [PASS in 0.03s]
+08:20:05  20 of 55 START test unique_stg_pipedrive_fields_field_id ....................... [RUN]
+08:20:05  20 of 55 PASS unique_stg_pipedrive_fields_field_id ............................. [PASS in 0.02s]
+08:20:05  21 of 55 START test not_null_stg_pipedrive_stages_stage_id ..................... [RUN]
+08:20:05  21 of 55 PASS not_null_stg_pipedrive_stages_stage_id ........................... [PASS in 0.02s]
+08:20:05  22 of 55 START test unique_stg_pipedrive_stages_stage_id ....................... [RUN]
+08:20:05  22 of 55 PASS unique_stg_pipedrive_stages_stage_id ............................. [PASS in 0.02s]
+08:20:05  23 of 55 START test not_null_stg_pipedrive_users_user_id ....................... [RUN]
+08:20:05  23 of 55 PASS not_null_stg_pipedrive_users_user_id ............................. [PASS in 0.02s]
+08:20:05  24 of 55 START test unique_stg_pipedrive_users_user_id ......................... [RUN]
+08:20:05  24 of 55 PASS unique_stg_pipedrive_users_user_id ............................... [PASS in 0.02s]
+08:20:05  25 of 55 START sql table model marts.dim_crm_activity_types .................... [RUN]
+08:20:05  25 of 55 OK created sql table model marts.dim_crm_activity_types ............... [SELECT 4 in 0.04s]
+08:20:05  26 of 55 START sql table model marts.dim_crm_field_options ..................... [RUN]
+08:20:05  26 of 55 OK created sql table model marts.dim_crm_field_options ................ [SELECT 14 in 0.03s]
+08:20:05  27 of 55 START sql table model marts.dim_crm_fields ............................ [RUN]
+08:20:05  27 of 55 OK created sql table model marts.dim_crm_fields ....................... [SELECT 4 in 0.03s]
+08:20:05  28 of 55 START sql table model marts.dim_crm_stages ............................ [RUN]
+08:20:05  28 of 55 OK created sql table model marts.dim_crm_stages ....................... [SELECT 9 in 0.03s]
+08:20:05  29 of 55 START sql table model marts.dim_crm_users ............................. [RUN]
+08:20:05  29 of 55 OK created sql table model marts.dim_crm_users ........................ [SELECT 1787 in 0.04s]
+08:20:05  30 of 55 START test not_null_mart__dim_crm_activity_types_activity_type_id ..... [RUN]
+08:20:05  30 of 55 PASS not_null_mart__dim_crm_activity_types_activity_type_id ........... [PASS in 0.02s]
+08:20:05  31 of 55 START test unique_mart__dim_crm_activity_types_activity_type_id ....... [RUN]
+08:20:05  31 of 55 PASS unique_mart__dim_crm_activity_types_activity_type_id ............. [PASS in 0.02s]
+08:20:05  32 of 55 START test not_null_mart__dim_crm_field_options_field_id .............. [RUN]
+08:20:05  32 of 55 PASS not_null_mart__dim_crm_field_options_field_id .................... [PASS in 0.02s]
+08:20:05  33 of 55 START test not_null_mart__dim_crm_field_options_option_id ............. [RUN]
+08:20:06  33 of 55 PASS not_null_mart__dim_crm_field_options_option_id ................... [PASS in 0.03s]
+08:20:06  34 of 55 START test not_null_mart__dim_crm_fields_field_id ..................... [RUN]
+08:20:06  34 of 55 PASS not_null_mart__dim_crm_fields_field_id ........................... [PASS in 0.02s]
+08:20:06  35 of 55 START test unique_mart__dim_crm_fields_field_id ....................... [RUN]
+08:20:06  35 of 55 PASS unique_mart__dim_crm_fields_field_id ............................. [PASS in 0.02s]
+08:20:06  36 of 55 START test not_null_mart__dim_crm_stages_stage_id ..................... [RUN]
+08:20:06  36 of 55 PASS not_null_mart__dim_crm_stages_stage_id ........................... [PASS in 0.02s]
+08:20:06  37 of 55 START test unique_mart__dim_crm_stages_stage_id ....................... [RUN]
+08:20:06  37 of 55 PASS unique_mart__dim_crm_stages_stage_id ............................. [PASS in 0.02s]
+08:20:06  38 of 55 START test not_null_mart__dim_crm_users_user_id ....................... [RUN]
+08:20:06  38 of 55 PASS not_null_mart__dim_crm_users_user_id ............................. [PASS in 0.02s]
+08:20:06  39 of 55 START test unique_mart__dim_crm_users_user_id ......................... [RUN]
+08:20:06  39 of 55 PASS unique_mart__dim_crm_users_user_id ............................... [PASS in 0.02s]
+08:20:06  40 of 55 START sql incremental model marts.fct_crm_activities .................. [RUN]
+08:20:06  40 of 55 OK created sql incremental model marts.fct_crm_activities ............. [SELECT 4568 in 0.10s]
+08:20:06  41 of 55 START sql incremental model marts.fct_crm_deal_changes ................ [RUN]
+08:20:06  41 of 55 OK created sql incremental model marts.fct_crm_deal_changes ........... [SELECT 15406 in 0.13s]
+08:20:06  42 of 55 START test not_null_mart__fct_crm_activities_activity_id .............. [RUN]
+08:20:06  42 of 55 PASS not_null_mart__fct_crm_activities_activity_id .................... [PASS in 0.02s]
+08:20:06  43 of 55 START test unique_mart__fct_crm_activities_activity_id ................ [RUN]
+08:20:06  43 of 55 PASS unique_mart__fct_crm_activities_activity_id ...................... [PASS in 0.02s]
+08:20:06  44 of 55 START test not_null_mart__fct_crm_deal_changes_deal_change_id ......... [RUN]
+08:20:06  44 of 55 PASS not_null_mart__fct_crm_deal_changes_deal_change_id ............... [PASS in 0.02s]
+08:20:06  45 of 55 START test not_null_mart__fct_crm_deal_changes_deal_id ................ [RUN]
+08:20:06  45 of 55 PASS not_null_mart__fct_crm_deal_changes_deal_id ...................... [PASS in 0.02s]
+08:20:06  46 of 55 START test unique_mart__fct_crm_deal_changes_deal_change_id ........... [RUN]
+08:20:06  46 of 55 PASS unique_mart__fct_crm_deal_changes_deal_change_id ................. [PASS in 0.03s]
+08:20:06  47 of 55 START sql table model reporting.rep_sales_funnel_monthly .............. [RUN]
+08:20:06  47 of 55 OK created sql table model reporting.rep_sales_funnel_monthly ......... [SELECT 154 in 0.07s]
+08:20:06  48 of 55 NO-OP exposure sales_funnel_monthly_dashboard ......................... [NO-OP in 0.00s]
+08:20:06  49 of 55 START test accepted_values_rep_sales_funnel_monthly_funnel_step__1__2__2_1__3__3_1__4__5__6__7__8__9  [RUN]
+08:20:06  49 of 55 PASS accepted_values_rep_sales_funnel_monthly_funnel_step__1__2__2_1__3__3_1__4__5__6__7__8__9  [PASS in 0.03s]
+08:20:06  50 of 55 START test dbt_utils_expression_is_true_rep_sales_funnel_monthly_deals_count___0  [RUN]
+08:20:06  50 of 55 PASS dbt_utils_expression_is_true_rep_sales_funnel_monthly_deals_count___0  [PASS in 0.02s]
+08:20:06  51 of 55 START test dbt_utils_unique_combination_of_columns_rep_sales_funnel_monthly_month__funnel_step  [RUN]
+08:20:06  51 of 55 PASS dbt_utils_unique_combination_of_columns_rep_sales_funnel_monthly_month__funnel_step  [PASS in 0.02s]
+08:20:06  52 of 55 START test not_null_rep_sales_funnel_monthly_deals_count .............. [RUN]
+08:20:06  52 of 55 PASS not_null_rep_sales_funnel_monthly_deals_count .................... [PASS in 0.02s]
+08:20:06  53 of 55 START test not_null_rep_sales_funnel_monthly_funnel_step .............. [RUN]
+08:20:06  53 of 55 PASS not_null_rep_sales_funnel_monthly_funnel_step .................... [PASS in 0.02s]
+08:20:06  54 of 55 START test not_null_rep_sales_funnel_monthly_kpi_name ................. [RUN]
+08:20:06  54 of 55 PASS not_null_rep_sales_funnel_monthly_kpi_name ....................... [PASS in 0.02s]
+08:20:06  55 of 55 START test not_null_rep_sales_funnel_monthly_month .................... [RUN]
+08:20:06  55 of 55 PASS not_null_rep_sales_funnel_monthly_month .......................... [PASS in 0.02s]
+08:20:06  
+08:20:06  Finished running 1 exposure, 2 incremental models, 6 seeds, 6 table models, 34 data tests, 6 view models in 0 hours 0 minutes and 4.94 seconds (4.94s).
+08:20:06  
+08:20:06  Completed successfully
+08:20:06  
+08:20:06  Done. PASS=54 WARN=0 ERROR=0 SKIP=0 NO-OP=1 TOTAL=55`
 ```
 
 ### 3. View DBT Documentation (Optional)
@@ -229,7 +226,7 @@ We partition our logic into distinct layers, each with dedicated responsibilitie
   - **Source Layer (`models/sources.yml`)**: Declares raw connection namespaces for external database tables. *(Note: Not utilized in this project as raw inputs are static CSVs loaded via the Seed layer).*
   - **Seed Layer (`seeds/`)**: Manages the ingestion of small, static lookup datasets directly from version-controlled CSV files. See the [Seeds Layer Guide](seeds/README.md) for details on static inputs and configurations.
 - **Staging Layer (`models/staging/`)**: Contains models that have direct 1:1 relationships with our raw source tables. They perform light cleaning, renaming, casting, and timezone conversion. See the [Staging Architecture Guide](models/staging/README.md) for details on naming conventions, directory layout, and configurations.
-- **Intermediate Layer (`models/intermediate/`)**: Contains models representing reusable business logic transformations. See the [Intermediate Architecture Guide](models/intermediate/README.md) for details on modular logic boundaries.
+- **Intermediate Layer (`models/intermediate/`)**: Reserved for reusable business logic transformations materialized as `ephemeral` (compiled inline, not persisted as database objects). Currently unpopulated — models will be added here as shared cross-mart logic is extracted. See the [Intermediate Architecture Guide](models/intermediate/README.md) for details on modular logic boundaries.
 - **Marts Layer (`models/marts/`)**: Contains the business-ready presentation models. See the [Marts Architecture Guide](models/marts/README.md) for details on our design principles and mart classifications:
   - **Dimension Tables (`dim_`)**: Descriptive entities (e.g. `dim_crm_users`).
   - **Fact Tables (`fct_`)**: Action/event-based metrics (e.g. `fct_crm_activities`).
@@ -239,7 +236,10 @@ We partition our logic into distinct layers, each with dedicated responsibilitie
   - *Future Exposures*: Can represent Metabase/Looker/Tableau dashboards, Census/Hightouch reverse ETL syncs, or ML feature stores.
 
 In addition:
-- **Analysis Layer (`analyses/`)**: Stores analytical scratchpads and ad-hoc queries. These files are compiled by dbt (resolving references and macros) but are not materialized in the database as models. See the [Analyses Layer Guide](analyses/README.md) for usage and commands.
+- **Analysis Layer (`analyses/`)**: Stores analytical scratchpads and ad-hoc queries. These files are compiled by dbt (resolving references and macros) but are not materialized in the database as models. See the [Analyses Layer Guide](analyses/README.md) for usage and commands. Key artefacts include:
+  - [`deal_changes_by_deal.sql`](analyses/deal_changes_by_deal.sql) — chronological change log for a given deal.
+  - [`deal_changes_field_keys.sql`](analyses/deal_changes_field_keys.sql) — frequency count of changed field keys.
+  - [`data_exploration_findings.md`](analyses/data_exploration_findings.md) — EDA findings: source data profiles, funnel mapping logic, and data quality decisions.
 
 
 ![dbt pipeline reporting lineage](docs/dbt_reporting_lineage.png)
@@ -248,29 +248,45 @@ In addition:
 We structure our files in the repository as follows:
 ```text
 dbt_enpal_assessment/
-├── seeds/                         # Raw static lookup files (CSV)
+├── raw_data/                      # Original source CSV files (pre-seed reference copies)
+│   └── load_data.sh               # Helper script to load raw CSVs into Postgres directly
+├── seeds/                         # dbt-managed seed files (CSV → s_pipedrive schema)
+│   ├── README.md                  # Seed layer documentation
+│   └── src_pipedrive.yml          # Seed schema & column configuration
 ├── analyses/                      # Analytical scratchpad queries (compiled, not materialized)
 │   ├── README.md                  # Documentation on how to run and compile analyses
+│   ├── data_exploration_findings.md  # EDA findings: source profiles, funnel mapping, data quality
 │   ├── deal_changes_by_deal.sql   # Query to view chronological changes for specific deal IDs
-│   └── deal_changes_field_keys.sql # Query to count occurrences of different changed fields
+│   └── deal_changes_field_keys.sql   # Query to count occurrences of different changed fields
+├── macros/
+│   ├── generate_schema_name.sql   # Overrides dbt's default schema naming behavior
+│   └── get_incremental_date_filter.sql  # Safe date filter macro for incremental models
 ├── models/
 │   ├── exposures.yml              # Downstream consumer definitions
 │   │
 │   ├── staging/                   # Ingestion Layer (1:1 with source tables)
 │   │   └── pipedrive/             # Subfolder per source application (e.g. Pipedrive)
-│   │       ├── configs/           # Centralized staging schema configuration
-│   │       └── s_pipedrive__stg_*.sql # Standardized casting & cleaning models
+│   │       ├── configs/           # Centralized staging schema configuration (YML per model)
+│   │       ├── src_pipedrive.yml  # Source declarations for the s_pipedrive seed schema
+│   │       └── stg_pipedrive_*.sql  # Standardized casting & cleaning models
 │   │
-│   ├── intermediate/              # Modular Layer (transitional reusable logic)
-│   │   └── int_*.sql              # Joins and pre-aggregations
+│   ├── intermediate/              # Modular Layer (ephemeral; reserved for future cross-mart logic)
+│   │   └── README.md
 │   │
 │   ├── marts/                     # Core Marts Layer (presentation layer)
-│   │   ├── configs/               # Centralized marts configuration
-│   │   ├── dim_*.sql              # Dimension tables (CRM entities)
-│   │   └── fct_*.sql              # Fact tables (Process events)
+│   │   ├── README.md
+│   │   ├── configs/               # Centralized marts configuration (YML per model)
+│   │   ├── mart__dim_*.sql        # Dimension tables (CRM entities)
+│   │   └── mart__fct_*.sql        # Fact tables (process events; incremental materialization)
 │   │
 │   └── reporting/                 # Downstream Presentation Layer
+│       ├── README.md
+│       ├── configs/               # Centralized reporting configuration (YML per model)
 │       └── rep_*.sql              # BI-ready monthly funnel reports
+├── .github/
+│   ├── CODEOWNERS                 # Ownership rules for core directories and config files
+│   └── pull_request_template.md   # Standardized PR checklist template
+├── .sqlfluff                      # SQLFluff linting configuration (dialect, capitalisation, aliasing)
 ├── dbt_project.yml                # Main configuration file for the dbt project
 ├── packages.yml                   # Lists external dbt packages (e.g. dbt_utils)
 ├── profiles.yml                   # Connection configurations for the warehouse target
@@ -278,9 +294,7 @@ dbt_enpal_assessment/
 ├── init.sql                       # Database initialization script executed on container startup
 ├── .python-version                # Declares the required Python runtime version
 ├── pyproject.toml                 # Configures Python packaging and dependencies (dbt-core, etc.)
-├── uv.lock                        # Lockfile generated by uv for reproducible virtual environments
-├── .gitignore                     # Lists files and folders intentionally untracked by Git
-└── package-lock.yml               # Node package manager lockfile (if package files are generated)
+└── uv.lock                        # Lockfile generated by uv for reproducible virtual environments
 ```
 
 ---
@@ -290,14 +304,14 @@ This section documents the project-wide development guidelines, data transformat
 
 ## Schema Configurations & Custom Macros
 We use custom macros to control database schemas and query building behaviors:
-- **`generate_schema_name` ([generate_schema_name.sql](../macros/generate_schema_name.sql))**: Overrides dbt's default schema resolution behavior. Staging and seeds are built directly into clean target schemas (e.g. `staging`, `s_pipedrive`) instead of appending them as target suffix schema names.
-- **`get_incremental_date_filter` ([get_incremental_date_filter.sql](../macros/get_incremental_date_filter.sql))**: Formats and injects safe date/timestamp filters inside subqueries for incremental models, preventing Postgres correlation query errors.
+- **`generate_schema_name` ([generate_schema_name.sql](macros/generate_schema_name.sql))**: Overrides dbt's default schema resolution behavior. Staging and seeds are built directly into clean target schemas (e.g. `staging`, `s_pipedrive`) instead of appending them as target suffix schema names.
+- **`get_incremental_date_filter` ([get_incremental_date_filter.sql](macros/get_incremental_date_filter.sql))**: Formats and injects safe date/timestamp filters inside subqueries for incremental models, preventing Postgres correlation query errors.
 
 ## Primary Key Validation & Testing
 - Every staging model configures data validation tests on its primary key (e.g., `unique` and `not_null` constraints on `activity_type_id` and `field_id`) in its respective YML configuration file to guarantee data integrity at the entry point of the pipeline.
 
 ## Timezone Handling
-- **Timezone Conversion**: Warehouse storage operates in UTC by default as a data modeling best practice to maintain consistency across source integrations. The only exception is the **Reporting / Activation layer**, which must convert timestamps to the local timezone of the operating market (e.g. `Europe/Berlin` for Germany) to align analytical dashboard reporting and operational workflows with local business schedules. This localized conversion is performed at the ingestion step in staging (e.g. `due_at` in [stg_pipedrive_activities.sql](../models/staging/stg_pipedrive_activities.sql)).
+- **Timezone Conversion**: Warehouse storage operates in UTC by default as a data modeling best practice to maintain consistency across source integrations. The only exception is the **Reporting / Activation layer**, which must convert timestamps to the local timezone of the operating market (e.g. `Europe/Berlin` for Germany) to align analytical dashboard reporting and operational workflows with local business schedules. This localized conversion is performed at the ingestion step in staging (e.g. `due_at` in [stg_pipedrive_activities.sql](models/staging/pipedrive/stg_pipedrive_activities.sql)).
 
 ## JSON Unnesting (CRM Fields)
 - **JSON Options Unnesting**: Staged CRM field definitions include a JSON column `field_value_options` containing an array of key-value pairs (id and label options). Although modern databases (like PostgreSQL) support querying semi-structured JSON natively, it is highly unperformant at scale and the SQL syntax varies significantly across different DWH engines (e.g. BigQuery, Snowflake, Redshift). To shield business stakeholders from complex JSON syntax, ensure cross-engine compatibility, and optimize query performance, we unnested these values into a dedicated `dim_crm_field_options` table in the marts layer and excluded the raw JSON column from the main `dim_crm_fields` dimension.
@@ -307,7 +321,7 @@ We use custom macros to control database schemas and query building behaviors:
 - **Schema Evolution Policy**:
   - The project-wide default is configured in `dbt_project.yml` as `+on_schema_change: "append_new_columns"`. This default is chosen because automatically syncing column removals or renames in production is risky; it should remain a manual, intentional action. Silent column drops or renames can easily break downstream dependencies, such as reporting dashboards, BI tools, or other dependent dbt models.
   - The two marts fact tables override this with `on_schema_change='sync_all_columns'` to automatically handle added, renamed, or deleted columns.
-- **Reusable Filtering Macro**: Created the `get_incremental_date_filter` macro ([get_incremental_date_filter.sql](../macros/get_incremental_date_filter.sql)) to safely handle postgres timestamp/date filtering within subqueries to avoid aggregate/correlation errors.
+- **Reusable Filtering Macro**: Created the `get_incremental_date_filter` macro ([get_incremental_date_filter.sql](macros/get_incremental_date_filter.sql)) to safely handle postgres timestamp/date filtering within subqueries to avoid aggregate/correlation errors.
 - **Context-Specific Filtering**: The placement of incremental date filters is customized based on model-specific logic to guarantee both query performance and business correctness (e.g. evaluating analytic window functions like `LAG()` over full history first, and applying filters to downstream joins only).
 
 # Governance & Guardrails
@@ -324,19 +338,29 @@ We use custom macros to control database schemas and query building behaviors:
 - We considered adding the `target/` folder to `.gitignore` since committing artifacts of every dbt invocation (such as compiled SQL, manifest files, and run results) is not useful and adds unnecessary noise to the repository.
 - However, we chose to keep it in git tracking for **interview purposes only** to make it easy to inspect generated files without requiring local database runs. In a production environment, we would absolutely ignore `target/` unless a very clear use case exists.
 
-## Proposed CI/CD Pipeline
-To guarantee long-term pipeline stability, we propose establishing a CI/CD workflow that catches syntax, logic, and style issues on every pull request:
-- **Linting & Code Quality (`sqlfluff` & `pre-commit`)**: 
-  - Integrate a SQL linter (like [sqlfluff](https://sqlfluff.com/)) in the remote CI pipeline to enforce SQL styling rules automatically.
-  - Set up local [pre-commit](https://pre-commit.com/) hooks to run `sqlfluff lint` and formatting checks locally before code is committed, shifting quality checks left.
+## CI/CD Pipeline
+
+To guarantee long-term pipeline stability, the following tooling is in place or proposed for the CI/CD workflow:
+
+### Implemented
+- **Pull Request Template (`.github/pull_request_template.md`)**: A standardized PR checklist template ([pull_request_template.md](.github/pull_request_template.md)) is enforced on every GitHub PR, requiring contributors to confirm local build success, downstream compatibility, and passing data tests before merge.
+- **CODEOWNERS Policy (`.github/CODEOWNERS`)**: A [CODEOWNERS](.github/CODEOWNERS) file assigns ownership over core configuration files (`profiles.yml`, `dbt_project.yml`, `.sqlfluff`) and the `.github/` directory to the central data platform maintainer, requiring their explicit review approval on any changes to these files.
+
+### Proposed
+- **SQL Linting (`.sqlfluff`)**: A [SQLFluff](https://sqlfluff.com/) configuration ([`.sqlfluff`](.sqlfluff)) is checked into the repository. It enforces the `postgres` dialect, requires uppercase SQL keywords and function names, and mandates explicit `AS` aliasing for all columns and tables — matching the project's SQL conventions exactly. The `dbt` templater is configured so linting resolves Jinja macros before analysis.
+- **Pre-commit Hooks**: Set up local [pre-commit](https://pre-commit.com/) hooks to run `sqlfluff lint` and formatting checks locally before code is committed, shifting quality checks left.
 - **`dbt compile` Checks**: The CI pipeline should run `dbt compile` on every PR to verify syntax correctness, project configuration compliance, and macro resolutions.
-- **Dry-Run in Ephemeral database**: Run modified dbt models against an ephemeral/temporary schema to perform a full dry-run execution and verify query execution.
+- **Dry-Run in Ephemeral Database**: Run modified dbt models against an ephemeral/temporary schema to perform a full dry-run execution and verify query execution.
 - **Automated Versioning & Releases (`semantic-release`)**: Propose implementing [semantic-release](https://github.com/semantic-release/semantic-release) to automate the package release workflow. By parsing commit messages following the Conventional Commits specification, it automatically determines version bumps (major, minor, patch), generates changelogs, publishes release tags, and updates model package versions in a reproducible way.
 
-## Proposed Repository Governance
-To open the repository for contributions from other Business Units or non-central data teams safely, we propose the following governance mechanisms:
-- **Pull Request Template**: Enforce a standardized Pull Request template so that all developers document changes, catalog schemas, and list validation results consistently.
-- **CODEOWNERS Policy**: Use a GitHub `CODEOWNERS` configuration. The central Data Platform team maintains ownership over core directories (such as `models/staging/` and macros), requiring their explicit approval on PRs, while decentralized teams are granted ownership over specific domain-based directories.
+## Repository Governance
+To open the repository for contributions from other Business Units or non-central data teams safely, the following governance mechanisms are in place or proposed:
+
+### Implemented
+- **Pull Request Template**: Standardized Pull Request template ([pull_request_template.md](.github/pull_request_template.md)) so that all developers document changes and list validation results consistently.
+- **CODEOWNERS Policy**: GitHub `CODEOWNERS` configuration ([CODEOWNERS](.github/CODEOWNERS)) assigns ownership over core directories requiring explicit approval on PRs.
+
+### Proposed
 - **Model Ownership Metadata**: Enforce the use of dbt `meta` properties at the model configuration level to document ownership directly in the code (e.g. configuring `+meta: {owner: "@team-sales-analytics"}` in the schema configurations). This maps code objects to specific Slack channels or teams for operational support and metadata cataloging.
 
 
